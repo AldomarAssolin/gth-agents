@@ -15,3 +15,7 @@ class UsuarioRepository(ReadRepository):
     @abstractmethod
     def get_by_email(self, email: str):
         pass
+
+    @abstractmethod
+    def save(self, usuario) -> None:
+        pass

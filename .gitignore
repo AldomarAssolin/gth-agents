@@ -1,4 +1,4 @@
-cat > .gitignore <<'EOF'
+
 __pycache__/
 *.pyc
 
@@ -24,4 +24,3 @@ uploads/
 
 .vscode/
 .idea/
-EOF

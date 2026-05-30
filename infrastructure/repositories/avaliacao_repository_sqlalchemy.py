@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from application.ports.avaliacao_repository import AvaliacaoRepository
@@ -18,3 +19,11 @@ class AvaliacaoRepositorySQLAlchemy(AvaliacaoRepository):
 
     def get_by_id(self, avaliacao_id: int) -> Avaliacao | None:
         return AvaliacaoMapper.to_domain(self.session.get(AvaliacaoModel, avaliacao_id))
+
+    def list_by_colaborador(self, colaborador_id: int) -> list[Avaliacao]:
+        models = self.session.execute(
+            select(AvaliacaoModel)
+            .filter_by(colaborador_id=colaborador_id)
+            .order_by(AvaliacaoModel.criado_em.asc())
+        ).scalars().all()
+        return [AvaliacaoMapper.to_domain(model) for model in models]

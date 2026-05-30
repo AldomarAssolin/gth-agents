@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, request
 
 from application.use_cases.registrar_feedback_uc import RegistrarFeedbackUC
+from application.use_cases.estruturar_feedback_uc import EstruturarFeedbackUC
 from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
-from interface.schemas.feedback_schema import parse_registrar_feedback
+from interface.schemas.feedback_schema import parse_registrar_feedback, parse_estruturar_feedback
 from interface.schemas.serializers import serialize
 
 
@@ -23,3 +24,11 @@ def registrar_feedback():
         feedback = uc.execute(dto)
 
     return jsonify(serialize(feedback)), 201
+
+
+@feedbacks_interface_bp.post("/estruturar")
+def estruturar_feedback():
+    dto = parse_estruturar_feedback(request.get_json(silent=True) or {})
+    uc = EstruturarFeedbackUC()
+    resultado = uc.execute(dto)
+    return jsonify(serialize(resultado)), 200

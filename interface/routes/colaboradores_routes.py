@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 
 from application.use_cases.criar_colaborador_uc import CriarColaboradorUC
+from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoColaboradorUC
+from application.use_cases.listar_metas_uc import ListarMetasColaboradorUC
 from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.colaborador_schema import parse_criar_colaborador
@@ -34,3 +36,29 @@ def buscar_perfil_colaborador(colaborador_id: int):
         return jsonify({"message": "Colaborador ainda nao possui perfil de talento."}), 404
 
     return jsonify(serialize(perfil)), 200
+
+
+@colaboradores_interface_bp.get("/<int:id>/evolucao")
+def obter_evolucao_colaborador(id: int):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        uc = VisualizarEvolucaoColaboradorUC(
+            colaboradores_repo=uow.colaboradores,
+            avaliacoes_repo=uow.avaliacoes,
+            metas_repo=uow.metas,
+            feedbacks_repo=uow.feedbacks,
+            perfis_repo=uow.perfis_talento,
+            competencias_repo=uow.competencias,
+        )
+        resultado = uc.execute(id)
+    return jsonify(serialize(resultado)), 200
+
+
+@colaboradores_interface_bp.get("/<int:id>/metas")
+def listar_metas_colaborador(id: int):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        uc = ListarMetasColaboradorUC(
+            colaboradores_repo=uow.colaboradores,
+            metas_repo=uow.metas,
+        )
+        metas = uc.execute(id)
+    return jsonify(serialize(metas)), 200

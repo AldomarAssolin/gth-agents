@@ -133,35 +133,36 @@ domain/
 
 ## Application
 
-Responsável pelos casos de uso.
+Responsável pelos casos de uso e serviços da aplicação.
 
 ```text
 application/
 ├── dtos
+├── errors
 ├── ports
-├── use_cases
-└── errors
+├── services (agents.py)
+└── use_cases
 ```
 
 ---
 
 ## Infrastructure
 
-Responsável pela persistência e integrações.
+Responsável pela persistência, mappers e controle transacional.
 
 ```text
 infrastructure/
 ├── database
-├── repositories
 ├── mappers
-└── unit_of_work
+├── repositories
+└── unit_of_work_sqlalchemy.py
 ```
 
 ---
 
 ## Interface
 
-Responsável pelos endpoints HTTP.
+Responsável pela API HTTP e serialização.
 
 ```text
 interface/

@@ -10,3 +10,7 @@ class CompetenciaRepository(ReadRepository):
     @abstractmethod
     def add(self, competencia):
         pass
+
+    @abstractmethod
+    def save(self, competencia) -> None:
+        pass

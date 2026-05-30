@@ -5,7 +5,12 @@ from dataclasses import dataclass
 class RegistrarFeedbackDTO:
     colaborador_id: int
     autor_id: int
+    contexto: str
     ponto_positivo: str
+    ponto_melhoria: str
     acao_recomendada: str
-    contexto: str | None = None
-    ponto_melhoria: str | None = None
+
+
+@dataclass(slots=True)
+class EstruturarFeedbackDTO:
+    observacao: str

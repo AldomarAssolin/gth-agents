@@ -25,10 +25,13 @@ class Competencia:
         return self.ativo
 
     def eh_tecnica(self) -> bool:
-        return self.tipo == TipoCompetencia.TECNICA
+        tipo = self.tipo.value if isinstance(self.tipo, TipoCompetencia) else self.tipo
+        return str(tipo).upper() == "TECNICA"
 
     def eh_comportamental(self) -> bool:
-        return self.tipo == TipoCompetencia.COMPORTAMENTAL
+        tipo = self.tipo.value if isinstance(self.tipo, TipoCompetencia) else self.tipo
+        return str(tipo).upper() == "COMPORTAMENTAL"
 
     def eh_lideranca(self) -> bool:
-        return self.tipo == TipoCompetencia.LIDERANCA
+        tipo = self.tipo.value if isinstance(self.tipo, TipoCompetencia) else self.tipo
+        return str(tipo).upper() == "LIDERANCA"

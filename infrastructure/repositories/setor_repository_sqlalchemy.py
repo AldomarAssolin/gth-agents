@@ -27,3 +27,11 @@ class SetorRepositorySQLAlchemy(SetorRepository):
         self.session.add(model)
         self.session.flush()
         return SetorMapper.to_domain(model)
+
+    def save(self, setor: Setor) -> None:
+        model = self.session.get(SetorModel, setor.id)
+        if model:
+            model.nome = setor.nome
+            model.descricao = setor.descricao
+            model.ativo = setor.ativo
+            self.session.flush()

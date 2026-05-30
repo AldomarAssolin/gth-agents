@@ -34,11 +34,17 @@ class CalculadoraCompetencias:
             nota_ponderada = float(item.nota) * float(competencia.peso)
             todas.append(nota_ponderada)
 
-            if competencia.tipo == TipoCompetencia.TECNICA:
+            tipo_str = (
+                competencia.tipo.value
+                if isinstance(competencia.tipo, TipoCompetencia)
+                else str(competencia.tipo)
+            ).upper()
+
+            if tipo_str == "TECNICA":
                 tecnicas.append(nota_ponderada)
-            elif competencia.tipo == TipoCompetencia.COMPORTAMENTAL:
+            elif tipo_str == "COMPORTAMENTAL":
                 comportamentais.append(nota_ponderada)
-            elif competencia.tipo == TipoCompetencia.LIDERANCA:
+            elif tipo_str == "LIDERANCA":
                 lideranca.append(nota_ponderada)
 
         return ResultadoCompetencias(

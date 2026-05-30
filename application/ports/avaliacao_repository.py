@@ -9,3 +9,7 @@ class AvaliacaoRepository(ABC):
     @abstractmethod
     def get_by_id(self, avaliacao_id: int):
         pass
+
+    @abstractmethod
+    def list_by_colaborador(self, colaborador_id: int):
+        pass

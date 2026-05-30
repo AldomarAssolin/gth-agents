@@ -9,6 +9,18 @@ from application.use_cases.cadastros_basicos_uc import (
     ListarFuncoesUC,
     ListarSetoresUC,
     ListarUsuariosUC,
+    BuscarSetorPorIdUC,
+    AtualizarSetorUC,
+    DesativarSetorUC,
+    BuscarFuncaoPorIdUC,
+    AtualizarFuncaoUC,
+    DesativarFuncaoUC,
+    BuscarUsuarioPorIdUC,
+    AtualizarUsuarioUC,
+    DesativarUsuarioUC,
+    BuscarCompetenciaPorIdUC,
+    AtualizarCompetenciaUC,
+    DesativarCompetenciaUC,
 )
 from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
@@ -17,6 +29,10 @@ from interface.schemas.cadastro_schema import (
     parse_criar_funcao,
     parse_criar_setor,
     parse_criar_usuario,
+    parse_atualizar_setor,
+    parse_atualizar_funcao,
+    parse_atualizar_usuario,
+    parse_atualizar_competencia,
 )
 from interface.schemas.serializers import serialize
 
@@ -82,3 +98,95 @@ def criar_competencia():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = CriarCompetenciaUC(uow.competencias).execute(dto)
     return jsonify(serialize(competencia)), 201
+
+
+# Setores
+@cadastros_interface_bp.get("/setores/<int:id>")
+def obter_setor(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        setor = BuscarSetorPorIdUC(uow.setores).execute(id)
+    return jsonify(serialize(setor)), 200
+
+
+@cadastros_interface_bp.put("/setores/<int:id>")
+def atualizar_setor(id):
+    dto = parse_atualizar_setor(id, request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        setor = AtualizarSetorUC(uow.setores).execute(dto)
+    return jsonify(serialize(setor)), 200
+
+
+@cadastros_interface_bp.patch("/setores/<int:id>/desativar")
+def desativar_setor(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        setor = DesativarSetorUC(uow.setores).execute(id)
+    return jsonify(serialize(setor)), 200
+
+
+# Funcoes
+@cadastros_interface_bp.get("/funcoes/<int:id>")
+def obter_funcao(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        funcao = BuscarFuncaoPorIdUC(uow.funcoes).execute(id)
+    return jsonify(serialize(funcao)), 200
+
+
+@cadastros_interface_bp.put("/funcoes/<int:id>")
+def atualizar_funcao(id):
+    dto = parse_atualizar_funcao(id, request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        funcao = AtualizarFuncaoUC(uow.funcoes).execute(dto)
+    return jsonify(serialize(funcao)), 200
+
+
+@cadastros_interface_bp.patch("/funcoes/<int:id>/desativar")
+def desativar_funcao(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        funcao = DesativarFuncaoUC(uow.funcoes).execute(id)
+    return jsonify(serialize(funcao)), 200
+
+
+# Usuarios
+@cadastros_interface_bp.get("/usuarios/<int:id>")
+def obter_usuario(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        usuario = BuscarUsuarioPorIdUC(uow.usuarios).execute(id)
+    return jsonify(serialize(usuario)), 200
+
+
+@cadastros_interface_bp.put("/usuarios/<int:id>")
+def atualizar_usuario(id):
+    dto = parse_atualizar_usuario(id, request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        usuario = AtualizarUsuarioUC(uow.usuarios).execute(dto)
+    return jsonify(serialize(usuario)), 200
+
+
+@cadastros_interface_bp.patch("/usuarios/<int:id>/desativar")
+def desativar_usuario(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        usuario = DesativarUsuarioUC(uow.usuarios).execute(id)
+    return jsonify(serialize(usuario)), 200
+
+
+# Competencias
+@cadastros_interface_bp.get("/competencias/<int:id>")
+def obter_competencia(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        competencia = BuscarCompetenciaPorIdUC(uow.competencias).execute(id)
+    return jsonify(serialize(competencia)), 200
+
+
+@cadastros_interface_bp.put("/competencias/<int:id>")
+def atualizar_competencia(id):
+    dto = parse_atualizar_competencia(id, request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        competencia = AtualizarCompetenciaUC(uow.competencias).execute(dto)
+    return jsonify(serialize(competencia)), 200
+
+
+@cadastros_interface_bp.patch("/competencias/<int:id>/desativar")
+def desativar_competencia(id):
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        competencia = DesativarCompetenciaUC(uow.competencias).execute(id)
+    return jsonify(serialize(competencia)), 200

@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from application.ports.competencia_repository import CompetenciaRepository
 from domain.entities.competencia import Competencia
+from domain.enums.tipo_competencia import TipoCompetencia
 from infrastructure.database.models.competencia_model import CompetenciaModel
 from infrastructure.mappers.competencia_mapper import CompetenciaMapper
 
@@ -23,3 +24,13 @@ class CompetenciaRepositorySQLAlchemy(CompetenciaRepository):
         self.session.add(model)
         self.session.flush()
         return CompetenciaMapper.to_domain(model)
+
+    def save(self, competencia: Competencia) -> None:
+        model = self.session.get(CompetenciaModel, competencia.id)
+        if model:
+            model.nome = competencia.nome
+            model.tipo = competencia.tipo.value if isinstance(competencia.tipo, TipoCompetencia) else str(competencia.tipo)
+            model.descricao = competencia.descricao
+            model.peso = competencia.peso
+            model.ativo = competencia.ativo
+            self.session.flush()

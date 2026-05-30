@@ -2,6 +2,7 @@ from infrastructure.database.models.avaliacao_model import AvaliacaoModel, ItemA
 from domain.entities.avaliacao import Avaliacao
 from domain.entities.item_avaliacao import ItemAvaliacao
 from domain.enums.tipo_avaliacao import TipoAvaliacao
+from infrastructure.mappers.competencia_mapper import CompetenciaMapper
 
 
 class AvaliacaoMapper:
@@ -24,6 +25,7 @@ class AvaliacaoMapper:
                     competencia_id=item.competencia_id,
                     nota=item.nota,
                     comentario=item.comentario,
+                    competencia=CompetenciaMapper.to_domain(item.competencia) if getattr(item, "competencia", None) else None,
                 )
                 for item in model.itens
             ],

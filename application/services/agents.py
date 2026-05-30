@@ -78,7 +78,7 @@ class AgenteAvaliador:
             elif item.nota <= 2:
                 pontos_melhoria.append(item.competencia.nome)
 
-        return pontos_fortes, pontos_melhoria
+        return puntos_fortes, pontos_melhoria
 
     def _nivel(self, media: float) -> str:
         if media >= 4:
@@ -155,7 +155,7 @@ class AgenteFeedback:
         return {
             "contexto": observacao,
             "ponto_positivo": "Ha aspectos positivos observados na atuacao do colaborador.",
-            "ponto_melhoria": "Identificar e comunicar riscos ou dificuldades com antecedencia.",
+            "ponto_melhoria": "Identificar e comunicar risks ou dificuldades com antecedencia.",
             "acao_recomendada": (
                 "Registrar a situacao observada, alinhar expectativa com o lider "
                 "e acompanhar a evolucao no proximo ciclo."

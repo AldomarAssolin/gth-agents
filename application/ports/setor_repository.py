@@ -14,3 +14,7 @@ class SetorRepository(ReadRepository):
     @abstractmethod
     def add(self, setor):
         pass
+
+    @abstractmethod
+    def save(self, setor) -> None:
+        pass

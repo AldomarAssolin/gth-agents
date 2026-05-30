@@ -6,7 +6,7 @@ from application.dtos.cadastro_dto import (
     CriarUsuarioDTO,
 )
 from application.dtos.colaborador_dto import CriarColaboradorDTO
-from application.dtos.feedback_dto import RegistrarFeedbackDTO
+from application.dtos.feedback_dto import RegistrarFeedbackDTO, EstruturarFeedbackDTO
 from application.dtos.meta_dto import CriarMetaDTO
 
 __all__ = [
@@ -19,4 +19,5 @@ __all__ = [
     "ItemAvaliacaoDTO",
     "RegistrarAvaliacaoDTO",
     "RegistrarFeedbackDTO",
+    "EstruturarFeedbackDTO",
 ]

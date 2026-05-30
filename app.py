@@ -2,7 +2,7 @@ from flask import Flask
 
 from app.config import Config
 from app.extensions import db
-from app.models import *  # noqa: F401,F403
+from infrastructure.database.models import *  # noqa: F401,F403
 from interface.error_handler import register_error_handlers
 from interface.routes.avaliacoes_routes import avaliacoes_interface_bp
 from interface.routes.cadastros_routes import cadastros_interface_bp

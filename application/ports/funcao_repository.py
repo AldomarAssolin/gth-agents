@@ -14,3 +14,7 @@ class FuncaoRepository(ReadRepository):
     @abstractmethod
     def add(self, funcao):
         pass
+
+    @abstractmethod
+    def save(self, funcao) -> None:
+        pass

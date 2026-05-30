@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from application.ports.usuario_repository import UsuarioRepository
 from domain.entities.usuario import Usuario
+from domain.enums.perfil_usuario import PerfilUsuario
 from infrastructure.database.models.usuario_model import UsuarioModel
 from infrastructure.mappers.usuario_mapper import UsuarioMapper
 
@@ -27,3 +28,13 @@ class UsuarioRepositorySQLAlchemy(UsuarioRepository):
         self.session.add(model)
         self.session.flush()
         return UsuarioMapper.to_domain(model)
+
+    def save(self, usuario: Usuario) -> None:
+        model = self.session.get(UsuarioModel, usuario.id)
+        if model:
+            model.nome = usuario.nome
+            model.email = usuario.email
+            model.senha_hash = usuario.senha_hash
+            model.perfil = usuario.perfil.value if isinstance(usuario.perfil, PerfilUsuario) else str(usuario.perfil)
+            model.ativo = usuario.ativo
+            self.session.flush()

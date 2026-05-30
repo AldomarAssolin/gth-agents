@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from domain.entities.competencia import Competencia
 
 
 @dataclass(slots=True)
@@ -7,6 +8,7 @@ class ItemAvaliacao:
     nota: int
     comentario: str | None = None
     id: int | None = None
+    competencia: Competencia | None = None
 
     def validar(self) -> None:
         if self.competencia_id is None:

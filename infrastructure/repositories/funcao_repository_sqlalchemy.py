@@ -27,3 +27,11 @@ class FuncaoRepositorySQLAlchemy(FuncaoRepository):
         self.session.add(model)
         self.session.flush()
         return FuncaoMapper.to_domain(model)
+
+    def save(self, funcao: Funcao) -> None:
+        model = self.session.get(FuncaoModel, funcao.id)
+        if model:
+            model.nome = funcao.nome
+            model.descricao = funcao.descricao
+            model.ativo = funcao.ativo
+            self.session.flush()

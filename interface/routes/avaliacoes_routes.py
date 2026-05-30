@@ -21,6 +21,7 @@ def registrar_avaliacao():
             competencias_repo=uow.competencias,
             avaliacoes_repo=uow.avaliacoes,
             perfis_talento_repo=uow.perfis_talento,
+            execucoes_agente_repo=uow.execucoes_agente,
         )
         resultado = uc.execute(dto)
 
