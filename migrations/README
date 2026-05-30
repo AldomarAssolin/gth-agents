@@ -1,0 +1,6 @@
+Alembic migrations for the GTH Agents backend.
+
+Common commands:
+
+  alembic revision --autogenerate -m "message"
+  alembic upgrade head

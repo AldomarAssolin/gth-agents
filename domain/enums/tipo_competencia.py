@@ -1,0 +1,8 @@
+from enum import Enum
+
+
+class TipoCompetencia(Enum):
+    TECNICA = "TECNICA"
+    COMPORTAMENTAL = "COMPORTAMENTAL"
+    LIDERANCA = "LIDERANCA"
+    ORGANIZACIONAL = "ORGANIZACIONAL"

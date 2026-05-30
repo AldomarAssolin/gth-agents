@@ -1,0 +1,27 @@
+cat > .gitignore <<'EOF'
+__pycache__/
+*.pyc
+
+.env
+.env.*
+!.env.example
+
+.venv/
+venv/
+
+instance/
+
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+*.db
+*.sqlite
+*.sqlite3
+
+logs/
+uploads/
+
+.vscode/
+.idea/
+EOF
