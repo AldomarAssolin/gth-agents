@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import List
 
 from application.ports.base_repository import ReadRepository
 from domain.entities.colaborador import Colaborador
@@ -14,7 +15,11 @@ class ColaboradorRepository(ReadRepository):
         pass
 
     @abstractmethod
-    def list(self) -> list[Colaborador]:
+    def list(self) -> List[Colaborador]:
+        pass
+
+    @abstractmethod
+    def list_by_setor_id(self, setor_id: int) -> List[Colaborador]:
         pass
 
     @abstractmethod
