@@ -1,0 +1,873 @@
+{
+  "info": {
+    "_postman_id": "bfd6cd5e-c12e-4b2a-8f64-839c9489aa21",
+    "name": "GTH Agents MVP",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00 - Health",
+      "item": [
+        {
+          "name": "GET Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "01 - Auth",
+      "item": [
+        {
+          "name": "POST Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.access_token) {",
+                  "    pm.environment.set(\"access_token\", responseJson.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@empresa.com\",\n  \"senha\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Usuários",
+      "item": [
+        {
+          "name": "POST Criar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"usuario_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Carlos Líder\",\n  \"email\": \"carlos.lider@empresa.com\",\n  \"senha\": \"123456\",\n  \"perfil\": \"LIDER\",\n  \"setor_id\": {{setor_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Usuários",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["usuarios"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Cadastro Base",
+      "item": [
+        {
+          "name": "POST Criar Setor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"setor_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Soldagem\",\n  \"descricao\": \"Setor responsável pelos processos de soldagem industrial.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/setores",
+              "host": ["{{base_url}}"],
+              "path": ["setores"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Setores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/setores",
+              "host": ["{{base_url}}"],
+              "path": ["setores"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Criar Função",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"funcao_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Soldador\",\n  \"descricao\": \"Profissional responsável pela execução de soldagem conforme procedimento.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/funcoes",
+              "host": ["{{base_url}}"],
+              "path": ["funcoes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Funções",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/funcoes",
+              "host": ["{{base_url}}"],
+              "path": ["funcoes"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Colaboradores",
+      "item": [
+        {
+          "name": "POST Criar Colaborador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"colaborador_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"matricula\": \"001\",\n  \"email\": \"joao@empresa.com\",\n  \"data_admissao\": \"2024-01-10\",\n  \"setor_id\": {{setor_id}},\n  \"funcao_id\": {{funcao_id}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/colaboradores",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Colaboradores",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Buscar Colaborador por ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Desativar Colaborador",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/inativar",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "inativar"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Ativar Colaborador",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/ativar",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "ativar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Competências",
+      "item": [
+        {
+          "name": "POST Criar Competência Técnica",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"competencia_tecnica_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Soldagem MIG/MAG\",\n  \"tipo\": \"TECNICA\",\n  \"descricao\": \"Executa soldagem MIG/MAG conforme procedimento.\",\n  \"peso\": 1.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/competencias",
+              "host": ["{{base_url}}"],
+              "path": ["competencias"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Criar Competência Comportamental",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"competencia_comportamental_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Comunicação preventiva\",\n  \"tipo\": \"COMPORTAMENTAL\",\n  \"descricao\": \"Comunica riscos antes que afetem a produção.\",\n  \"peso\": 1.0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/competencias",
+              "host": ["{{base_url}}"],
+              "path": ["competencias"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Competências",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/competencias",
+              "host": ["{{base_url}}"],
+              "path": ["competencias"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 - Avaliações",
+      "item": [
+        {
+          "name": "POST Registrar Avaliação",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"colaborador_id\": {{colaborador_id}},\n  \"tipo\": \"AVALIACAO_LIDER\",\n  \"observacao_geral\": \"Colaborador apresenta boa entrega técnica e evolução comportamental.\",\n  \"itens\": [\n    {\n      \"competencia_id\": {{competencia_tecnica_id}},\n      \"nota\": 5,\n      \"comentario\": \"Boa execução técnica.\"\n    },\n    {\n      \"competencia_id\": {{competencia_comportamental_id}},\n      \"nota\": 4,\n      \"comentario\": \"Boa comunicação preventiva.\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/avaliacoes",
+              "host": ["{{base_url}}"],
+              "path": ["avaliacoes"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07 - Perfil de Talento",
+      "item": [
+        {
+          "name": "GET Obter Último Perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "perfil"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08 - Metas",
+      "item": [
+        {
+          "name": "POST Criar Meta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"colaborador_id\": {{colaborador_id}},\n  \"titulo\": \"Melhorar comunicação preventiva\",\n  \"descricao\": \"Registrar antecipadamente riscos ou dificuldades identificadas durante a execução das atividades.\",\n  \"indicador\": \"2 registros preventivos por semana\",\n  \"prazo\": \"2026-07-30\",\n  \"prioridade\": \"ALTA\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/metas",
+              "host": ["{{base_url}}"],
+              "path": ["metas"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Metas do Colaborador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/metas",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "metas"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09 - Feedbacks",
+      "item": [
+        {
+          "name": "POST Registrar Feedback",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"colaborador_id\": {{colaborador_id}},\n  \"contexto\": \"Acompanhamento semanal da produção\",\n  \"ponto_positivo\": \"Demonstra boa qualidade técnica e consistência nas entregas.\",\n  \"ponto_melhoria\": \"Precisa comunicar riscos de atraso com mais antecedência.\",\n  \"acao_recomendada\": \"Sempre que identificar risco de atraso, avisar o líder no mesmo turno.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedbacks",
+              "host": ["{{base_url}}"],
+              "path": ["feedbacks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Estruturar Feedback Livre",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"texto_livre\": \"João foi prestativo no turno, mas precisa de atenção na segurança. Recomendo ler o manual.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/feedbacks/estruturar",
+              "host": ["{{base_url}}"],
+              "path": ["feedbacks", "estruturar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10 - PDI",
+      "item": [
+        {
+          "name": "POST Criar PDI",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"pdi_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"colaborador_id\": {{colaborador_id}},\n  \"titulo\": \"Desenvolvimento em comunicação preventiva\",\n  \"descricao\": \"Plano para melhorar comunicação de riscos, registro de ocorrências e acompanhamento com liderança.\",\n  \"origem\": \"AVALIACAO\",\n  \"data_inicio\": \"2026-06-01\",\n  \"data_fim\": \"2026-08-30\",\n  \"acoes\": []\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pdis",
+              "host": ["{{base_url}}"],
+              "path": ["pdis"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar PDIs do Colaborador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/pdis",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "pdis"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST Adicionar Ação ao PDI",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"acao_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"PRATICA_SUPERVISIONADA\",\n  \"descricao\": \"Registrar riscos de atraso ou falta de material durante o turno.\",\n  \"prazo\": \"2026-06-30\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/pdis/{{pdi_id}}/acoes",
+              "host": ["{{base_url}}"],
+              "path": ["pdis", "{{pdi_id}}", "acoes"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Concluir Ação PDI",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/pdis/{{pdi_id}}/acoes/{{acao_id}}/concluir",
+              "host": ["{{base_url}}"],
+              "path": ["pdis", "{{pdi_id}}", "acoes", "{{acao_id}}", "concluir"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11 - Reconhecimentos",
+      "item": [
+        {
+          "name": "POST Registrar Reconhecimento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const responseJson = pm.response.json();",
+                  "if (responseJson.id) {",
+                  "    pm.environment.set(\"reconhecimento_id\", responseJson.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"colaborador_id\": {{colaborador_id}},\n  \"tipo\": \"EVOLUCAO_TECNICA\",\n  \"descricao\": \"Colaborador apresentou evolução consistente na qualidade das entregas.\",\n  \"evidencia\": \"Meta concluída e feedback positivo do líder.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reconhecimentos",
+              "host": ["{{base_url}}"],
+              "path": ["reconhecimentos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET Listar Reconhecimentos do Colaborador",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/reconhecimentos",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "reconhecimentos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH Cancelar Reconhecimento",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"motivo_cancelamento\": \"Registro duplicado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/reconhecimentos/{{reconhecimento_id}}/cancelar",
+              "host": ["{{base_url}}"],
+              "path": ["reconhecimentos", "{{reconhecimento_id}}", "cancelar"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12 - Evolução do Colaborador",
+      "item": [
+        {
+          "name": "GET Evolução Consolidada",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/colaboradores/{{colaborador_id}}/evolucao",
+              "host": ["{{base_url}}"],
+              "path": ["colaboradores", "{{colaborador_id}}", "evolucao"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13 - Dashboard MVP",
+      "item": [
+        {
+          "name": "GET Dashboard MVP",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/dashboard/mvp",
+              "host": ["{{base_url}}"],
+              "path": ["dashboard", "mvp"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
