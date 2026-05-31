@@ -37,4 +37,7 @@ class UsuarioRepositorySQLAlchemy(UsuarioRepository):
             model.senha_hash = usuario.senha_hash
             model.perfil = usuario.perfil.value if isinstance(usuario.perfil, PerfilUsuario) else str(usuario.perfil)
             model.ativo = usuario.ativo
+            model.colaborador_id = usuario.colaborador_id
+            model.setor_id = usuario.setor_id
             self.session.flush()
+

@@ -23,6 +23,9 @@ class CriarUsuarioDTO:
     email: str
     senha: str
     perfil: PerfilUsuario
+    colaborador_id: int | None = None
+    setor_id: int | None = None
+
 
 
 @dataclass(slots=True)
@@ -54,6 +57,9 @@ class AtualizarUsuarioDTO:
     email: str
     perfil: PerfilUsuario
     senha: str | None = None
+    colaborador_id: int | None = None
+    setor_id: int | None = None
+
 
 
 @dataclass(slots=True)

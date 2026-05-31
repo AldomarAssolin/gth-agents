@@ -5,7 +5,7 @@ import jwt
 
 class JWTService:
     @staticmethod
-    def gerar_token(usuario_id: int, email: str, perfil: str) -> str:
+    def gerar_token(usuario_id: int, email: str, perfil: str, colaborador_id: int | None = None, setor_id: int | None = None) -> str:
         secret = os.getenv("JWT_SECRET_KEY", "dev-jwt-secret-change-me")
         algorithm = os.getenv("JWT_ALGORITHM", "HS256")
         expires_minutes = int(os.getenv("JWT_EXPIRES_MINUTES", "60"))
@@ -15,9 +15,12 @@ class JWTService:
             "id": usuario_id,
             "email": email,
             "perfil": perfil,
+            "colaborador_id": colaborador_id,
+            "setor_id": setor_id,
             "iat": now,
             "exp": now + timedelta(minutes=expires_minutes),
         }
+
         return jwt.encode(payload, secret, algorithm=algorithm)
 
     @staticmethod

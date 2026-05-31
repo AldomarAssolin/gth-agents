@@ -87,8 +87,11 @@ class CriarUsuarioUC:
                 email=dto.email,
                 senha_hash=generate_password_hash(dto.senha),
                 perfil=dto.perfil,
+                colaborador_id=dto.colaborador_id,
+                setor_id=dto.setor_id,
             )
         )
+
 
 
 class ListarCompetenciasUC:
@@ -231,10 +234,13 @@ class AtualizarUsuarioUC:
         usuario.nome = dto.nome
         usuario.email = dto.email
         usuario.perfil = dto.perfil
+        usuario.colaborador_id = dto.colaborador_id
+        usuario.setor_id = dto.setor_id
         if dto.senha:
             usuario.senha_hash = generate_password_hash(dto.senha)
         self.usuarios_repo.save(usuario)
         return usuario
+
 
 
 class DesativarUsuarioUC:

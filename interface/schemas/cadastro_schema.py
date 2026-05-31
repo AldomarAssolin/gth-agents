@@ -28,7 +28,10 @@ def parse_criar_usuario(data: dict) -> CriarUsuarioDTO:
         email=data.get("email"),
         senha=data.get("senha"),
         perfil=PerfilUsuario((data.get("perfil") or "").upper()),
+        colaborador_id=data.get("colaborador_id"),
+        setor_id=data.get("setor_id"),
     )
+
 
 
 def parse_criar_competencia(data: dict) -> CriarCompetenciaDTO:
@@ -64,8 +67,11 @@ def parse_atualizar_usuario(entity_id: int, data: dict) -> AtualizarUsuarioDTO:
         nome=data.get("nome"),
         email=data.get("email"),
         perfil=perfil,
-        senha=data.get("senha")
+        senha=data.get("senha"),
+        colaborador_id=data.get("colaborador_id"),
+        setor_id=data.get("setor_id"),
     )
+
 
 
 def parse_atualizar_competencia(entity_id: int, data: dict) -> AtualizarCompetenciaDTO:

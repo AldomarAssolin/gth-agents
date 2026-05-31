@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, g
 
 from application.use_cases.registrar_avaliacao_uc import RegistrarAvaliacaoUC
 from infrastructure.database.session import SessionLocal
@@ -6,6 +6,8 @@ from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.avaliacao_schema import parse_registrar_avaliacao
 from interface.schemas.serializers import serialize
 from interface.middlewares.auth_middleware import roles_required
+from application.security.access_scope_service import AccessScopeService
+from application.errors import NotFoundError
 
 
 avaliacoes_interface_bp = Blueprint("interface_avaliacoes", __name__, url_prefix="/avaliacoes")
@@ -17,6 +19,12 @@ def registrar_avaliacao():
     dto = parse_registrar_avaliacao(request.get_json(silent=True) or {})
 
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        colaborador = uow.colaboradores.get_by_id(dto.colaborador_id)
+        if not colaborador:
+            raise NotFoundError("Colaborador nao encontrado.")
+
+        AccessScopeService.ensure_can_manage_colaborador(g.usuario, colaborador)
+
         uc = RegistrarAvaliacaoUC(
             colaboradores_repo=uow.colaboradores,
             usuarios_repo=uow.usuarios,

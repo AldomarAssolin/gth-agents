@@ -15,6 +15,8 @@ class UsuarioMapper:
             senha_hash=model.senha_hash,
             perfil=PerfilUsuario(model.perfil),
             ativo=model.ativo,
+            colaborador_id=model.colaborador_id,
+            setor_id=model.setor_id,
             criado_em=model.criado_em,
         )
 
@@ -25,6 +27,9 @@ class UsuarioMapper:
             nome=entity.nome,
             email=entity.email,
             senha_hash=entity.senha_hash,
-            perfil=entity.perfil.value,
+            perfil=entity.perfil.value if hasattr(entity.perfil, "value") else str(entity.perfil),
             ativo=entity.ativo,
+            colaborador_id=entity.colaborador_id,
+            setor_id=entity.setor_id,
         )
+

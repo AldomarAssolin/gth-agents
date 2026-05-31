@@ -14,7 +14,10 @@ class Usuario:
     perfil: PerfilUsuario
     ativo: bool = True
     id: int | None = None
+    colaborador_id: int | None = None
+    setor_id: int | None = None
     criado_em: datetime | None = None
+
 
     def ativar(self) -> None:
         self.ativo = True
