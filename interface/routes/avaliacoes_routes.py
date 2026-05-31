@@ -5,12 +5,14 @@ from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.avaliacao_schema import parse_registrar_avaliacao
 from interface.schemas.serializers import serialize
+from interface.middlewares.auth_middleware import roles_required
 
 
 avaliacoes_interface_bp = Blueprint("interface_avaliacoes", __name__, url_prefix="/avaliacoes")
 
 
 @avaliacoes_interface_bp.post("")
+@roles_required("ADMIN", "RH", "LIDER")
 def registrar_avaliacao():
     dto = parse_registrar_avaliacao(request.get_json(silent=True) or {})
 

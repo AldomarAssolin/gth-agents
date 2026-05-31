@@ -27,6 +27,7 @@ from application.use_cases.colaborador_use_cases import (
     AtualizarColaboradorUC,
     AlterarStatusColaboradorUC,
 )
+from application.use_cases.login_usuario_uc import LoginUsuarioUC
 
 __all__ = [
     "CriarColaboradorUC",
@@ -54,4 +55,6 @@ __all__ = [
     "AtivarFuncaoUC",
     "AtivarUsuarioUC",
     "AtivarCompetenciaUC",
+    "LoginUsuarioUC",
 ]
+

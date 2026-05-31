@@ -5,12 +5,14 @@ from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.meta_schema import parse_criar_meta
 from interface.schemas.serializers import serialize
+from interface.middlewares.auth_middleware import roles_required
 
 
 metas_interface_bp = Blueprint("interface_metas", __name__, url_prefix="/metas")
 
 
 @metas_interface_bp.post("")
+@roles_required("ADMIN", "RH", "LIDER")
 def criar_meta():
     dto = parse_criar_meta(request.get_json(silent=True) or {})
 

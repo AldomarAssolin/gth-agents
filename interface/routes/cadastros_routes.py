@@ -39,6 +39,8 @@ from interface.schemas.cadastro_schema import (
     parse_atualizar_competencia,
 )
 from interface.schemas.serializers import serialize
+from interface.middlewares.auth_middleware import roles_required
+
 
 
 cadastros_interface_bp = Blueprint("interface_cadastros", __name__)
@@ -53,7 +55,9 @@ def listar_setores():
 
 
 @cadastros_interface_bp.post("/setores")
+@roles_required("ADMIN", "RH")
 def criar_setor():
+
     dto = parse_criar_setor(request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         setor = CriarSetorUC(uow.setores).execute(dto)
@@ -98,7 +102,9 @@ def listar_funcoes():
 
 
 @cadastros_interface_bp.post("/funcoes")
+@roles_required("ADMIN", "RH")
 def criar_funcao():
+
     dto = parse_criar_funcao(request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         funcao = CriarFuncaoUC(uow.funcoes).execute(dto)
@@ -142,7 +148,9 @@ def listar_usuarios():
 
 
 @cadastros_interface_bp.post("/usuarios")
+@roles_required("ADMIN", "RH")
 def criar_usuario():
+
     dto = parse_criar_usuario(request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         usuario = CriarUsuarioUC(uow.usuarios).execute(dto)
@@ -186,7 +194,9 @@ def listar_competencias():
 
 
 @cadastros_interface_bp.post("/competencias")
+@roles_required("ADMIN", "RH")
 def criar_competencia():
+
     dto = parse_criar_competencia(request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = CriarCompetenciaUC(uow.competencias).execute(dto)

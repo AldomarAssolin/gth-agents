@@ -14,6 +14,8 @@ from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.colaborador_schema import parse_criar_colaborador, parse_atualizar_colaborador
 from interface.schemas.serializers import serialize
+from interface.middlewares.auth_middleware import auth_required
+
 
 
 colaboradores_interface_bp = Blueprint("interface_colaboradores", __name__, url_prefix="/colaboradores")
@@ -28,6 +30,7 @@ def listar_colaboradores():
 
 
 @colaboradores_interface_bp.post("")
+@auth_required
 def criar_colaborador():
     dto = parse_criar_colaborador(request.get_json(silent=True) or {})
 
@@ -96,6 +99,7 @@ def desligar_colaborador(id: int):
 
 
 @colaboradores_interface_bp.get("/<int:colaborador_id>/perfil")
+@auth_required
 def buscar_perfil_colaborador(colaborador_id: int):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         perfil = uow.perfis_talento.get_ultimo_by_colaborador_id(colaborador_id)

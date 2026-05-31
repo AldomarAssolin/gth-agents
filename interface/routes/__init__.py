@@ -4,6 +4,7 @@ from interface.routes.colaboradores_routes import colaboradores_interface_bp
 from interface.routes.feedbacks_routes import feedbacks_interface_bp
 from interface.routes.health_routes import health_bp
 from interface.routes.metas_routes import metas_interface_bp
+from interface.routes.auth_routes import auth_bp
 
 __all__ = [
     "avaliacoes_interface_bp",
@@ -12,4 +13,6 @@ __all__ = [
     "feedbacks_interface_bp",
     "health_bp",
     "metas_interface_bp",
+    "auth_bp",
 ]
+

@@ -8,6 +8,7 @@ from application.dtos.cadastro_dto import (
 from application.dtos.colaborador_dto import CriarColaboradorDTO
 from application.dtos.feedback_dto import RegistrarFeedbackDTO, EstruturarFeedbackDTO
 from application.dtos.meta_dto import CriarMetaDTO
+from application.dtos.auth_dto import LoginDTO
 
 __all__ = [
     "CriarColaboradorDTO",
@@ -20,4 +21,6 @@ __all__ = [
     "RegistrarAvaliacaoDTO",
     "RegistrarFeedbackDTO",
     "EstruturarFeedbackDTO",
+    "LoginDTO",
 ]
+

@@ -6,12 +6,15 @@ from infrastructure.database.session import SessionLocal
 from infrastructure.unit_of_work_sqlalchemy import UnitOfWorkSQLAlchemy
 from interface.schemas.feedback_schema import parse_registrar_feedback, parse_estruturar_feedback
 from interface.schemas.serializers import serialize
+from interface.middlewares.auth_middleware import roles_required
+
 
 
 feedbacks_interface_bp = Blueprint("interface_feedbacks", __name__, url_prefix="/feedbacks")
 
 
 @feedbacks_interface_bp.post("")
+@roles_required("ADMIN", "RH", "LIDER")
 def registrar_feedback():
     dto = parse_registrar_feedback(request.get_json(silent=True) or {})
 
@@ -27,6 +30,7 @@ def registrar_feedback():
 
 
 @feedbacks_interface_bp.post("/estruturar")
+@roles_required("ADMIN", "RH", "LIDER")
 def estruturar_feedback():
     dto = parse_estruturar_feedback(request.get_json(silent=True) or {})
     uc = EstruturarFeedbackUC()

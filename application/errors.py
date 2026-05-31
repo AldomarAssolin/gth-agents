@@ -19,3 +19,14 @@ class ConflictError(AppError):
 class ValidationError(AppError):
     def __init__(self, message: str):
         super().__init__(message, 400, "VALIDATION_ERROR")
+
+
+class UnauthorizedError(AppError):
+    def __init__(self, message: str = "Nao autorizado."):
+        super().__init__(message, 401, "UNAUTHORIZED")
+
+
+class ForbiddenError(AppError):
+    def __init__(self, message: str = "Acesso negado."):
+        super().__init__(message, 403, "FORBIDDEN")
+
