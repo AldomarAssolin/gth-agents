@@ -10,3 +10,14 @@ class CriarColaboradorDTO:
     data_admissao: date | None
     setor_id: int
     funcao_id: int
+
+
+@dataclass(slots=True)
+class AtualizarColaboradorDTO:
+    id: int
+    nome: str
+    matricula: str
+    email: str | None
+    data_admissao: date | None
+    setor_id: int
+    funcao_id: int

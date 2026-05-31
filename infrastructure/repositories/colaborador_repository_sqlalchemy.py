@@ -23,3 +23,19 @@ class ColaboradorRepositorySQLAlchemy(ColaboradorRepository):
         self.session.add(model)
         self.session.flush()
         return ColaboradorMapper.to_domain(model)
+
+    def list(self) -> list[Colaborador]:
+        models = self.session.execute(select(ColaboradorModel).order_by(ColaboradorModel.id.asc())).scalars().all()
+        return [ColaboradorMapper.to_domain(model) for model in models]
+
+    def save(self, colaborador: Colaborador) -> None:
+        model = self.session.get(ColaboradorModel, colaborador.id)
+        if model:
+            model.nome = colaborador.nome
+            model.matricula = colaborador.matricula
+            model.email = colaborador.email
+            model.data_admissao = colaborador.data_admissao
+            model.setor_id = colaborador.setor_id
+            model.funcao_id = colaborador.funcao_id
+            model.status = colaborador.status.value if hasattr(colaborador.status, "value") else colaborador.status
+            self.session.flush()

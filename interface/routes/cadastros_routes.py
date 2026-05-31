@@ -40,6 +40,7 @@ from interface.schemas.serializers import serialize
 cadastros_interface_bp = Blueprint("interface_cadastros", __name__)
 
 
+# Setores
 @cadastros_interface_bp.get("/setores")
 def listar_setores():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -55,52 +56,6 @@ def criar_setor():
     return jsonify(serialize(setor)), 201
 
 
-@cadastros_interface_bp.get("/funcoes")
-def listar_funcoes():
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        funcoes = ListarFuncoesUC(uow.funcoes).execute()
-    return jsonify(serialize(funcoes)), 200
-
-
-@cadastros_interface_bp.post("/funcoes")
-def criar_funcao():
-    dto = parse_criar_funcao(request.get_json(silent=True) or {})
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        funcao = CriarFuncaoUC(uow.funcoes).execute(dto)
-    return jsonify(serialize(funcao)), 201
-
-
-@cadastros_interface_bp.get("/usuarios")
-def listar_usuarios():
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        usuarios = ListarUsuariosUC(uow.usuarios).execute()
-    return jsonify(serialize(usuarios)), 200
-
-
-@cadastros_interface_bp.post("/usuarios")
-def criar_usuario():
-    dto = parse_criar_usuario(request.get_json(silent=True) or {})
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        usuario = CriarUsuarioUC(uow.usuarios).execute(dto)
-    return jsonify(serialize(usuario)), 201
-
-
-@cadastros_interface_bp.get("/competencias")
-def listar_competencias():
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        competencias = ListarCompetenciasUC(uow.competencias).execute()
-    return jsonify(serialize(competencias)), 200
-
-
-@cadastros_interface_bp.post("/competencias")
-def criar_competencia():
-    dto = parse_criar_competencia(request.get_json(silent=True) or {})
-    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        competencia = CriarCompetenciaUC(uow.competencias).execute(dto)
-    return jsonify(serialize(competencia)), 201
-
-
-# Setores
 @cadastros_interface_bp.get("/setores/<int:id>")
 def obter_setor(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -124,6 +79,20 @@ def desativar_setor(id):
 
 
 # Funcoes
+@cadastros_interface_bp.get("/funcoes")
+def listar_funcoes():
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        funcoes = ListarFuncoesUC(uow.funcoes).execute()
+    return jsonify(serialize(funcoes)), 200
+
+
+@cadastros_interface_bp.post("/funcoes")
+def criar_funcao():
+    dto = parse_criar_funcao(request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        funcao = CriarFuncaoUC(uow.funcoes).execute(dto)
+    return jsonify(serialize(funcao)), 201
+
 @cadastros_interface_bp.get("/funcoes/<int:id>")
 def obter_funcao(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -147,6 +116,20 @@ def desativar_funcao(id):
 
 
 # Usuarios
+@cadastros_interface_bp.get("/usuarios")
+def listar_usuarios():
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        usuarios = ListarUsuariosUC(uow.usuarios).execute()
+    return jsonify(serialize(usuarios)), 200
+
+
+@cadastros_interface_bp.post("/usuarios")
+def criar_usuario():
+    dto = parse_criar_usuario(request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        usuario = CriarUsuarioUC(uow.usuarios).execute(dto)
+    return jsonify(serialize(usuario)), 201
+
 @cadastros_interface_bp.get("/usuarios/<int:id>")
 def obter_usuario(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -170,12 +153,26 @@ def desativar_usuario(id):
 
 
 # Competencias
+@cadastros_interface_bp.get("/competencias")
+def listar_competencias():
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        competencias = ListarCompetenciasUC(uow.competencias).execute()
+    return jsonify(serialize(competencias)), 200
+
+
+@cadastros_interface_bp.post("/competencias")
+def criar_competencia():
+    dto = parse_criar_competencia(request.get_json(silent=True) or {})
+    with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
+        competencia = CriarCompetenciaUC(uow.competencias).execute(dto)
+    return jsonify(serialize(competencia)), 201
+
 @cadastros_interface_bp.get("/competencias/<int:id>")
 def obter_competencia(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = BuscarCompetenciaPorIdUC(uow.competencias).execute(id)
     return jsonify(serialize(competencia)), 200
-
+    
 
 @cadastros_interface_bp.put("/competencias/<int:id>")
 def atualizar_competencia(id):

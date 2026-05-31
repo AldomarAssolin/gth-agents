@@ -17,6 +17,12 @@ from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoCola
 from application.use_cases.estruturar_feedback_uc import EstruturarFeedbackUC
 from application.use_cases.listar_metas_uc import ListarMetasColaboradorUC
 from application.use_cases.registrar_execucao_agente_uc import RegistrarExecucaoAgenteUC
+from application.use_cases.colaborador_use_cases import (
+    ListarColaboradoresUC,
+    BuscarColaboradorPorIdUC,
+    AtualizarColaboradorUC,
+    AlterarStatusColaboradorUC,
+)
 
 __all__ = [
     "CriarColaboradorUC",
@@ -36,4 +42,8 @@ __all__ = [
     "EstruturarFeedbackUC",
     "ListarMetasColaboradorUC",
     "RegistrarExecucaoAgenteUC",
+    "ListarColaboradoresUC",
+    "BuscarColaboradorPorIdUC",
+    "AtualizarColaboradorUC",
+    "AlterarStatusColaboradorUC",
 ]

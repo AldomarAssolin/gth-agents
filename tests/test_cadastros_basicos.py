@@ -211,3 +211,23 @@ def test_competencias_crud(client):
     res = client.patch(f"/competencias/{comp_id}/desativar")
     assert res.status_code == 200
     assert res.get_json()["ativo"] is False
+
+
+def test_setor_put_errors_and_routing(client):
+    # 1. PUT /setores/{id} existente retorna 200
+    res = client.post("/setores", json={"nome": "TI", "descricao": "Tecnologia"})
+    assert res.status_code == 201
+    setor_id = res.get_json()["id"]
+
+    res = client.put(f"/setores/{setor_id}", json={"nome": "TI Atualizado", "descricao": "TI Novo"})
+    assert res.status_code == 200
+
+    # 2. PUT /setores/{id} inexistente retorna 404
+    res = client.put("/setores/999", json={"nome": "Inexistente", "descricao": "Nao existe"})
+    assert res.status_code == 404
+
+    # 3. rota inexistente retorna 404, não 500
+    res = client.get("/rotas_totalmente_inexistentes")
+    assert res.status_code == 404
+    assert res.get_json()["error"] != "INTERNAL_SERVER_ERROR"
+
