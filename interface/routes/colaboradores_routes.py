@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, g
 
 from application.use_cases.criar_colaborador_uc import CriarColaboradorUC
-from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoColaboradorUC
+from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoColaboradorUC, ConsultarEvolucaoColaboradorUC
 from application.use_cases.listar_metas_uc import ListarMetasColaboradorUC
 from application.use_cases.colaborador_use_cases import (
     ListarColaboradoresUC,
@@ -182,17 +182,8 @@ def buscar_perfil_colaborador(colaborador_id: int):
 @auth_required
 def obter_evolucao_colaborador(id: int):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
-        AccessScopeService.ensure_can_access_recurso_do_colaborador(g.usuario, id, uow.colaboradores)
-
-        uc = VisualizarEvolucaoColaboradorUC(
-            colaboradores_repo=uow.colaboradores,
-            avaliacoes_repo=uow.avaliacoes,
-            metas_repo=uow.metas,
-            feedbacks_repo=uow.feedbacks,
-            perfis_repo=uow.perfis_talento,
-            competencias_repo=uow.competencias,
-        )
-        resultado = uc.execute(id)
+        uc = ConsultarEvolucaoColaboradorUC(uow)
+        resultado = uc.execute(id, g.usuario)
 
     return jsonify(serialize(resultado)), 200
 

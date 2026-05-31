@@ -17,7 +17,8 @@ from application.use_cases.criar_meta_uc import CriarMetaUC
 from application.use_cases.gerar_perfil_talento_uc import GerarPerfilTalentoUC
 from application.use_cases.registrar_avaliacao_uc import RegistrarAvaliacaoUC
 from application.use_cases.registrar_feedback_uc import RegistrarFeedbackUC
-from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoColaboradorUC
+from application.use_cases.evolucao_colaborador_uc import VisualizarEvolucaoColaboradorUC, ConsultarEvolucaoColaboradorUC
+from application.use_cases.dashboard_uc import ConsultarDashboardMVP_UC
 from application.use_cases.estruturar_feedback_uc import EstruturarFeedbackUC
 from application.use_cases.listar_metas_uc import ListarMetasColaboradorUC
 from application.use_cases.registrar_execucao_agente_uc import RegistrarExecucaoAgenteUC
@@ -44,6 +45,8 @@ __all__ = [
     "RegistrarAvaliacaoUC",
     "RegistrarFeedbackUC",
     "VisualizarEvolucaoColaboradorUC",
+    "ConsultarEvolucaoColaboradorUC",
+    "ConsultarDashboardMVP_UC",
     "EstruturarFeedbackUC",
     "ListarMetasColaboradorUC",
     "RegistrarExecucaoAgenteUC",
