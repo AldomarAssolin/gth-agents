@@ -7,6 +7,10 @@ from application.use_cases.cadastros_basicos_uc import (
     ListarFuncoesUC,
     ListarSetoresUC,
     ListarUsuariosUC,
+    AtivarSetorUC,
+    AtivarFuncaoUC,
+    AtivarUsuarioUC,
+    AtivarCompetenciaUC,
 )
 from application.use_cases.criar_colaborador_uc import CriarColaboradorUC
 from application.use_cases.criar_meta_uc import CriarMetaUC
@@ -46,4 +50,8 @@ __all__ = [
     "BuscarColaboradorPorIdUC",
     "AtualizarColaboradorUC",
     "AlterarStatusColaboradorUC",
+    "AtivarSetorUC",
+    "AtivarFuncaoUC",
+    "AtivarUsuarioUC",
+    "AtivarCompetenciaUC",
 ]

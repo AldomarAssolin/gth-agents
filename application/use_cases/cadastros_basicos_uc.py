@@ -290,3 +290,55 @@ class DesativarCompetenciaUC:
         competencia.desativar()
         self.competencias_repo.save(competencia)
         return competencia
+
+
+class AtivarSetorUC:
+    def __init__(self, setores_repo: SetorRepository):
+        self.setores_repo = setores_repo
+
+    def execute(self, setor_id: int) -> Setor:
+        setor = self.setores_repo.get_by_id(setor_id)
+        if not setor:
+            raise NotFoundError("Setor nao encontrado.")
+        setor.ativar()
+        self.setores_repo.save(setor)
+        return setor
+
+
+class AtivarFuncaoUC:
+    def __init__(self, funcoes_repo: FuncaoRepository):
+        self.funcoes_repo = funcoes_repo
+
+    def execute(self, funcao_id: int) -> Funcao:
+        funcao = self.funcoes_repo.get_by_id(funcao_id)
+        if not funcao:
+            raise NotFoundError("Funcao nao encontrada.")
+        funcao.ativar()
+        self.funcoes_repo.save(funcao)
+        return funcao
+
+
+class AtivarUsuarioUC:
+    def __init__(self, usuarios_repo: UsuarioRepository):
+        self.usuarios_repo = usuarios_repo
+
+    def execute(self, usuario_id: int) -> Usuario:
+        usuario = self.usuarios_repo.get_by_id(usuario_id)
+        if not usuario:
+            raise NotFoundError("Usuario nao encontrado.")
+        usuario.ativar()
+        self.usuarios_repo.save(usuario)
+        return usuario
+
+
+class AtivarCompetenciaUC:
+    def __init__(self, competencias_repo: CompetenciaRepository):
+        self.competencias_repo = competencias_repo
+
+    def execute(self, competencia_id: int) -> Competencia:
+        competencia = self.competencias_repo.get_by_id(competencia_id)
+        if not competencia:
+            raise NotFoundError("Competencia nao encontrada.")
+        competencia.ativar()
+        self.competencias_repo.save(competencia)
+        return competencia

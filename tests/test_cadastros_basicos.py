@@ -231,3 +231,89 @@ def test_setor_put_errors_and_routing(client):
     assert res.status_code == 404
     assert res.get_json()["error"] != "INTERNAL_SERVER_ERROR"
 
+
+def test_cadastro_reactivations(client):
+    # Setores
+    res = client.post("/setores", json={"nome": "Comercial", "descricao": "Vendas"})
+    assert res.status_code == 201
+    setor_id = res.get_json()["id"]
+
+    # Desativar
+    client.patch(f"/setores/{setor_id}/desativar")
+    # 1. Reativar setor inativo retorna 200
+    res = client.patch(f"/setores/{setor_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 2. Reativar setor já ativo retorna 200
+    res = client.patch(f"/setores/{setor_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 3. Reativar setor inexistente retorna 404
+    res = client.patch("/setores/999/ativar")
+    assert res.status_code == 404
+
+    # Funcoes
+    res = client.post("/funcoes", json={"nome": "Analista", "descricao": "Negocios", "setor_id": setor_id})
+    assert res.status_code == 201
+    funcao_id = res.get_json()["id"]
+
+    # Desativar
+    client.patch(f"/funcoes/{funcao_id}/desativar")
+    # 1. Reativar função inativa retorna 200
+    res = client.patch(f"/funcoes/{funcao_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 2. Reativar função já ativa retorna 200
+    res = client.patch(f"/funcoes/{funcao_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 3. Reativar função inexistente retorna 404
+    res = client.patch("/funcoes/999/ativar")
+    assert res.status_code == 404
+
+    # Usuarios
+    res = client.post("/usuarios", json={"nome": "User1", "email": "user1@company.com", "perfil": "ADMIN", "senha": "pwd"})
+    assert res.status_code == 201
+    usuario_id = res.get_json()["id"]
+
+    # Desativar
+    client.patch(f"/usuarios/{usuario_id}/desativar")
+    # 1. Reativar usuário inativo retorna 200
+    res = client.patch(f"/usuarios/{usuario_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 2. Reativar usuário já ativo retorna 200
+    res = client.patch(f"/usuarios/{usuario_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 3. Reativar usuário inexistente retorna 404
+    res = client.patch("/usuarios/999/ativar")
+    assert res.status_code == 404
+
+    # Competencias
+    res = client.post("/competencias", json={"nome": "SQL", "tipo": "TECNICA", "peso": 2.0})
+    assert res.status_code == 201
+    competencia_id = res.get_json()["id"]
+
+    # Desativar
+    client.patch(f"/competencias/{competencia_id}/desativar")
+    # 1. Reativar competência inativa retorna 200
+    res = client.patch(f"/competencias/{competencia_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 2. Reativar competência já ativa retorna 200
+    res = client.patch(f"/competencias/{competencia_id}/ativar")
+    assert res.status_code == 200
+    assert res.get_json()["ativo"] is True
+
+    # 3. Reativar competência inexistente retorna 404
+    res = client.patch("/competencias/999/ativar")
+    assert res.status_code == 404
+
