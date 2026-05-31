@@ -11,6 +11,7 @@ from infrastructure.database.models.setor_model import SetorModel
 from infrastructure.database.models.usuario_model import UsuarioModel
 from infrastructure.database.models.pdi_model import PDIModel
 from infrastructure.database.models.acao_pdi_model import AcaoPDIModel
+from infrastructure.database.models.reconhecimento_model import ReconhecimentoModel
 
 __all__ = [
     "AvaliacaoModel",
@@ -26,5 +27,7 @@ __all__ = [
     "UsuarioModel",
     "PDIModel",
     "AcaoPDIModel",
+    "ReconhecimentoModel",
 ]
+
 

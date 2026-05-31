@@ -9,6 +9,7 @@ from application.ports.setor_repository import SetorRepository
 from application.ports.usuario_repository import UsuarioRepository
 from application.ports.pdi_repository import PDIRepository
 from application.ports.acao_pdi_repository import AcaoPDIRepository
+from application.ports.reconhecimento_repository import ReconhecimentoRepository
 
 __all__ = [
     "AvaliacaoRepository",
@@ -22,5 +23,7 @@ __all__ = [
     "UsuarioRepository",
     "PDIRepository",
     "AcaoPDIRepository",
+    "ReconhecimentoRepository",
 ]
+
 

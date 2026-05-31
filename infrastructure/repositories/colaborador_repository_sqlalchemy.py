@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -24,11 +25,21 @@ class ColaboradorRepositorySQLAlchemy(ColaboradorRepository):
         self.session.flush()
         return ColaboradorMapper.to_domain(model)
 
-    def list(self) -> list[Colaborador]:
+    def list(self) -> List[Colaborador]:
         models = self.session.execute(select(ColaboradorModel).order_by(ColaboradorModel.id.asc())).scalars().all()
         return [ColaboradorMapper.to_domain(model) for model in models]
 
+    def list_by_setor_id(self, setor_id: int) -> List[Colaborador]:
+        models = self.session.execute(
+            select(ColaboradorModel)
+            .filter_by(setor_id=setor_id)
+            .order_by(ColaboradorModel.id.asc())
+        ).scalars().all()
+        return [ColaboradorMapper.to_domain(model) for model in models]
+
+
     def save(self, colaborador: Colaborador) -> None:
+
         model = self.session.get(ColaboradorModel, colaborador.id)
         if model:
             model.nome = colaborador.nome

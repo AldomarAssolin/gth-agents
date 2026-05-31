@@ -10,6 +10,7 @@ from infrastructure.repositories.usuario_repository_sqlalchemy import UsuarioRep
 from infrastructure.repositories.execucao_agente_repository_sqlalchemy import ExecucaoAgenteRepositorySQLAlchemy
 from infrastructure.repositories.pdi_repository_sqlalchemy import PDIRepositorySQLAlchemy
 from infrastructure.repositories.acao_pdi_repository_sqlalchemy import AcaoPDIRepositorySQLAlchemy
+from infrastructure.repositories.reconhecimento_repository_sqlalchemy import ReconhecimentoRepositorySQLAlchemy
 
 
 class UnitOfWorkSQLAlchemy:
@@ -31,7 +32,9 @@ class UnitOfWorkSQLAlchemy:
         self.execucoes_agente = ExecucaoAgenteRepositorySQLAlchemy(self.session)
         self.pdis = PDIRepositorySQLAlchemy(self.session)
         self.acoes_pdi = AcaoPDIRepositorySQLAlchemy(self.session)
+        self.reconhecimentos = ReconhecimentoRepositorySQLAlchemy(self.session)
         return self
+
 
 
     def __exit__(self, exc_type, exc_value, traceback):
