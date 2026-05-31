@@ -9,6 +9,8 @@ from infrastructure.database.models.meta_model import MetaModel
 from infrastructure.database.models.perfil_talento_model import PerfilTalentoModel
 from infrastructure.database.models.setor_model import SetorModel
 from infrastructure.database.models.usuario_model import UsuarioModel
+from infrastructure.database.models.pdi_model import PDIModel
+from infrastructure.database.models.acao_pdi_model import AcaoPDIModel
 
 __all__ = [
     "AvaliacaoModel",
@@ -22,4 +24,7 @@ __all__ = [
     "PerfilTalentoModel",
     "SetorModel",
     "UsuarioModel",
+    "PDIModel",
+    "AcaoPDIModel",
 ]
+

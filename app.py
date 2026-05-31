@@ -11,6 +11,7 @@ from interface.routes.feedbacks_routes import feedbacks_interface_bp
 from interface.routes.health_routes import health_bp
 from interface.routes.metas_routes import metas_interface_bp
 from interface.routes.auth_routes import auth_bp
+from interface.routes.pdis_routes import pdis_interface_bp
 
 
 def create_app(config_class: type[Config] = Config) -> Flask:
@@ -26,6 +27,8 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(avaliacoes_interface_bp)
     app.register_blueprint(metas_interface_bp)
     app.register_blueprint(feedbacks_interface_bp)
+    app.register_blueprint(pdis_interface_bp)
+
 
 
     register_error_handlers(app)
