@@ -74,7 +74,10 @@ class RegistrarAvaliacaoUC:
             competencia = self.competencias_repo.get_by_id(item.competencia_id)
             if not competencia:
                 raise NotFoundError(f"Competencia {item.competencia_id} nao encontrada.")
+            if not competencia.ativo:
+                raise ValidationError("Nao e possivel avaliar competencia inativa.")
             competencias_por_id[competencia.id] = competencia
+
 
         avaliacao_salva = self.avaliacoes_repo.add(avaliacao)
         try:
@@ -102,8 +105,10 @@ class RegistrarAvaliacaoUC:
             "media_tecnica": float(resultado.media_tecnica),
             "media_comportamental": float(resultado.media_comportamental),
             "media_lideranca": float(resultado.media_lideranca),
+            "media_organizacional": float(resultado.media_organizacional),
             "media_geral": float(resultado.media_geral),
         }
+
         
         self.registrar_execucao_uc.execute(RegistrarExecucaoAgenteDTO(
             agente_nome="Agente Avaliador",

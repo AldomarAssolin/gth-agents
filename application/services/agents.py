@@ -29,7 +29,9 @@ class AgenteAvaliador:
             "media_tecnica": resultado.media_tecnica,
             "media_comportamental": resultado.media_comportamental,
             "media_lideranca": resultado.media_lideranca,
+            "media_organizacional": resultado.media_organizacional,
             "media_geral": resultado.media_geral,
+
             "pontos_fortes": pontos_fortes or ["Entrega consistente"],
             "pontos_melhoria": pontos_melhoria or ["Manter evolucao continua"],
             "resumo": (
@@ -105,8 +107,10 @@ class AgentePerfilador:
                 media_tecnica=analise["media_tecnica"],
                 media_comportamental=analise["media_comportamental"],
                 media_lideranca=analise["media_lideranca"],
+                media_organizacional=analise.get("media_organizacional", 0.0),
                 media_geral=analise["media_geral"],
             ),
+
         )
 
         return {

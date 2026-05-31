@@ -109,6 +109,8 @@ class CriarCompetenciaUC:
     def execute(self, dto: CriarCompetenciaDTO) -> Competencia:
         if not dto.nome:
             raise ValidationError("Nome da competencia e obrigatorio.")
+        if dto.peso is not None and dto.peso <= 0:
+            raise ValidationError("Peso da competencia deve ser maior que zero.")
         return self.competencias_repo.add(
             Competencia(
                 nome=dto.nome,
@@ -117,6 +119,7 @@ class CriarCompetenciaUC:
                 peso=dto.peso,
             )
         )
+
 
 
 class BuscarSetorPorIdUC:
@@ -277,12 +280,15 @@ class AtualizarCompetenciaUC:
             raise NotFoundError("Competencia nao encontrada.")
         if not dto.nome:
             raise ValidationError("Nome da competencia e obrigatorio.")
+        if dto.peso is not None and dto.peso <= 0:
+            raise ValidationError("Peso da competencia deve ser maior que zero.")
         competencia.nome = dto.nome
         competencia.tipo = dto.tipo
         competencia.descricao = dto.descricao
         competencia.peso = dto.peso
         self.competencias_repo.save(competencia)
         return competencia
+
 
 
 class DesativarCompetenciaUC:

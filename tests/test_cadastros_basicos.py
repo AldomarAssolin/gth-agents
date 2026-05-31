@@ -212,6 +212,22 @@ def test_competencias_crud(client):
     assert res.status_code == 200
     assert res.get_json()["ativo"] is False
 
+    # 6. POST com peso <= 0 deve falhar com 400
+    res = client.post("/competencias", json={
+        "nome": "Python Zero Peso",
+        "tipo": "TECNICA",
+        "peso": 0.0
+    })
+    assert res.status_code == 400
+
+    res = client.post("/competencias", json={
+        "nome": "Python Peso Negativo",
+        "tipo": "TECNICA",
+        "peso": -1.0
+    })
+    assert res.status_code == 400
+
+
 
 def test_setor_put_errors_and_routing(client):
     # 1. PUT /setores/{id} existente retorna 200
