@@ -161,3 +161,17 @@ def test_colaborador_evolucao_e_logs_agente(client):
     assert evolucao["indicadores"]["perfil_atual"] is not None
     assert len(evolucao["avaliacoes"]) == 1
     assert len(evolucao["avaliacoes"][0]["itens"]) == 2
+
+    # 8. Desativar competência técnica e tentar registrar nova avaliação (deve falhar com 400)
+    client.patch(f"/competencias/{comp_tecnica_id}/desativar")
+    res = client.post("/avaliacoes", json={
+        "colaborador_id": colaborador_id,
+        "avaliador_id": avaliador_id,
+        "tipo": "AVALIACAO_LIDER",
+        "observacao_geral": "Nova avaliacao que deve falhar",
+        "itens": [
+            {"competencia_id": comp_tecnica_id, "nota": 4, "comentario": "Tentativa inativa"}
+        ]
+    })
+    assert res.status_code == 400
+

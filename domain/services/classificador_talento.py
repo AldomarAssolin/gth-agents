@@ -27,23 +27,28 @@ class ClassificadorTalento:
         tecnico = resultado.media_tecnica
         comportamental = resultado.media_comportamental
         lideranca = resultado.media_lideranca
+        geral = resultado.media_geral
 
-        if tecnico >= 4 and comportamental >= 4 and lideranca >= 4:
+        if tecnico >= 4.0 and comportamental >= 4.0 and (lideranca >= 4.0 or lideranca == 0.0):
             return ClassificacaoTalento.ALTA_PERFORMANCE
-        if tecnico >= 4 and lideranca >= 3:
+
+        if (tecnico >= 3.0 and comportamental >= 4.0 and lideranca >= 4.0) or (tecnico >= 4.0 and lideranca >= 4.0):
             return ClassificacaoTalento.POTENCIAL_LIDER
-        if tecnico >= 4 and comportamental < 4:
+
+        if (tecnico >= 4.0 and comportamental < 4.0) or (tecnico >= 4.0 and lideranca < 4.0):
             return ClassificacaoTalento.ESPECIALISTA_TECNICO
-        if tecnico >= 3 and comportamental >= 3:
+
+        if geral >= 3.0 and (tecnico >= 3.0 or comportamental >= 3.0):
             return ClassificacaoTalento.TALENTO_EM_DESENVOLVIMENTO
+
         return ClassificacaoTalento.NECESSITA_DESENVOLVIMENTO
 
     def _nivel(self, media: float) -> str:
-        if media >= 4:
+        if media >= 4.0:
             return "ALTO"
-        if media >= 3:
+        if media >= 3.0:
             return "MEDIO"
-        if media > 0:
+        if media > 0.0:
             return "BAIXO"
         return "NAO_AVALIADO"
 
@@ -61,45 +66,49 @@ class ClassificadorTalento:
 
     def _identificar_pontos_fortes(self, resultado: ResultadoCompetencias) -> list[str]:
         pontos = []
-        if resultado.media_tecnica >= 4:
-            pontos.append("Boa competencia tecnica.")
-        if resultado.media_comportamental >= 4:
+        if resultado.media_tecnica >= 4.0:
+            pontos.append("Boa competência técnica.")
+        if resultado.media_comportamental >= 4.0:
             pontos.append("Bom comportamento organizacional.")
-        if resultado.media_lideranca >= 4:
-            pontos.append("Boa capacidade de lideranca.")
+        if resultado.media_lideranca >= 4.0:
+            pontos.append("Boa capacidade de liderança.")
+        if resultado.media_organizacional >= 4.0:
+            pontos.append("Boa aderência aos valores e práticas organizacionais.")
         return pontos
 
     def _identificar_pontos_melhoria(self, resultado: ResultadoCompetencias) -> list[str]:
         pontos = []
-        if resultado.media_tecnica < 3:
-            pontos.append("Desenvolver competencias tecnicas.")
-        if resultado.media_comportamental < 3:
-            pontos.append("Desenvolver competencias comportamentais.")
-        if resultado.media_lideranca < 3:
-            pontos.append("Desenvolver competencias de lideranca.")
+        if 0.0 < resultado.media_tecnica < 3.0:
+            pontos.append("Desenvolver competências técnicas.")
+        if 0.0 < resultado.media_comportamental < 3.0:
+            pontos.append("Desenvolver competências comportamentais.")
+        if 0.0 < resultado.media_lideranca < 3.0:
+            pontos.append("Desenvolver competências de liderança.")
+        if 0.0 < resultado.media_organizacional < 3.0:
+            pontos.append("Desenvolver aderência organizacional.")
         return pontos
 
     def recomendacoes(self, classificacao: ClassificacaoTalento) -> list[str]:
         recomendacoes = {
             ClassificacaoTalento.ALTA_PERFORMANCE: [
-                "Criar desafios maiores",
-                "Avaliar trilha de lideranca",
+                "Manter acompanhamento e oferecer desafios maiores.",
+                "Considerar para projetos estratégicos ou mentoria.",
             ],
             ClassificacaoTalento.ESPECIALISTA_TECNICO: [
-                "Atuar como referencia tecnica",
-                "Mentorar colaboradores juniores",
+                "Utilizar como referência técnica.",
+                "Desenvolver comunicação, influência e apoio a colegas.",
             ],
             ClassificacaoTalento.POTENCIAL_LIDER: [
-                "Participar de apoio a lideranca",
-                "Conduzir pequenas iniciativas",
+                "Incluir em atividades de apoio à liderança.",
+                "Oferecer mentoria com liderança experiente.",
             ],
             ClassificacaoTalento.TALENTO_EM_DESENVOLVIMENTO: [
-                "Definir metas de evolucao",
-                "Acompanhar feedbacks periodicos",
+                "Criar plano de desenvolvimento individual.",
+                "Acompanhar evolução por metas e feedbacks periódicos.",
             ],
             ClassificacaoTalento.NECESSITA_DESENVOLVIMENTO: [
-                "Criar plano de acao imediato",
-                "Aumentar acompanhamento do lider",
+                "Priorizar treinamento e acompanhamento próximo.",
+                "Definir metas de curto prazo para evolução.",
             ],
         }
         return recomendacoes[classificacao]
