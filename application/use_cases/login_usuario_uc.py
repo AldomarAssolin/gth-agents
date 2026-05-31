@@ -19,7 +19,14 @@ class LoginUsuarioUC:
         if not usuario.ativo:
             raise ForbiddenError("Usuario inativo.")
 
-        token = JWTService.gerar_token(usuario.id, usuario.email, usuario.perfil.value)
+        token = JWTService.gerar_token(
+            usuario.id,
+            usuario.email,
+            usuario.perfil.value,
+            usuario.colaborador_id,
+            usuario.setor_id,
+        )
+
 
         return {
             "access_token": token,
