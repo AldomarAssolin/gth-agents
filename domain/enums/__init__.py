@@ -5,6 +5,7 @@ from domain.enums.status_colaborador import StatusColaborador
 from domain.enums.status_meta import StatusMeta
 from domain.enums.tipo_avaliacao import TipoAvaliacao
 from domain.enums.tipo_competencia import TipoCompetencia
+from domain.enums.pdi_enums import StatusPDI, OrigemPDI, TipoAcaoPDI, StatusAcaoPDI
 
 __all__ = [
     "ClassificacaoTalento",
@@ -14,4 +15,9 @@ __all__ = [
     "StatusMeta",
     "TipoAvaliacao",
     "TipoCompetencia",
+    "StatusPDI",
+    "OrigemPDI",
+    "TipoAcaoPDI",
+    "StatusAcaoPDI",
 ]
+

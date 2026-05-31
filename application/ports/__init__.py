@@ -7,6 +7,8 @@ from application.ports.meta_repository import MetaRepository
 from application.ports.perfil_talento_repository import PerfilTalentoRepository
 from application.ports.setor_repository import SetorRepository
 from application.ports.usuario_repository import UsuarioRepository
+from application.ports.pdi_repository import PDIRepository
+from application.ports.acao_pdi_repository import AcaoPDIRepository
 
 __all__ = [
     "AvaliacaoRepository",
@@ -18,4 +20,7 @@ __all__ = [
     "PerfilTalentoRepository",
     "SetorRepository",
     "UsuarioRepository",
+    "PDIRepository",
+    "AcaoPDIRepository",
 ]
+

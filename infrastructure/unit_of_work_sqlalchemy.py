@@ -8,6 +8,8 @@ from infrastructure.repositories.perfil_talento_repository_sqlalchemy import Per
 from infrastructure.repositories.setor_repository_sqlalchemy import SetorRepositorySQLAlchemy
 from infrastructure.repositories.usuario_repository_sqlalchemy import UsuarioRepositorySQLAlchemy
 from infrastructure.repositories.execucao_agente_repository_sqlalchemy import ExecucaoAgenteRepositorySQLAlchemy
+from infrastructure.repositories.pdi_repository_sqlalchemy import PDIRepositorySQLAlchemy
+from infrastructure.repositories.acao_pdi_repository_sqlalchemy import AcaoPDIRepositorySQLAlchemy
 
 
 class UnitOfWorkSQLAlchemy:
@@ -27,7 +29,10 @@ class UnitOfWorkSQLAlchemy:
         self.metas = MetaRepositorySQLAlchemy(self.session)
         self.feedbacks = FeedbackRepositorySQLAlchemy(self.session)
         self.execucoes_agente = ExecucaoAgenteRepositorySQLAlchemy(self.session)
+        self.pdis = PDIRepositorySQLAlchemy(self.session)
+        self.acoes_pdi = AcaoPDIRepositorySQLAlchemy(self.session)
         return self
+
 
     def __exit__(self, exc_type, exc_value, traceback):
         try:
