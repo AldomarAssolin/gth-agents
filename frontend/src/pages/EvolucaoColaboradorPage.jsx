@@ -1,8 +1,10 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
 import Badge from "../components/ui/Badge";
 import Card from "../components/ui/Card";
 import EmptyState from "../components/ui/EmptyState";
+import { buscarColaboradorPorId } from "../features/colaboradores/colaboradoresService";
 
 const mockEvolucoes = {
   1: [
@@ -15,16 +17,32 @@ const mockEvolucoes = {
   3: []
 };
 
-const mockColaboradoresMap = {
-  1: "João Silva",
-  2: "Maria Santos",
-  3: "Pedro Souza",
-};
-
 export default function EvolucaoColaboradorPage() {
   const { id } = useParams();
-  const nomeColaborador = mockColaboradoresMap[id] || "Não encontrado";
+  const [nomeColaborador, setNomeColaborador] = useState("Carregando...");
   const evolucoes = mockEvolucoes[id] || [];
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function fetchName() {
+      try {
+        const colab = await buscarColaboradorPorId(id, { signal: controller.signal });
+        setNomeColaborador(colab.nome);
+      } catch (err) {
+        if (err.code !== "ERR_CANCELED" && err.name !== "CanceledError") {
+          setNomeColaborador("Não encontrado");
+        }
+      }
+    }
+
+    fetchName();
+
+    return () => {
+      controller.abort();
+    };
+  }, [id]);
+
 
   return (
     <div className="space-y-6">
