@@ -1,35 +1,26 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Button from "../components/ui/Button";
-import Input from "../components/ui/Input";
+import { useAuth } from "../features/auth/useAuth";
+import LoginForm from "../features/auth/LoginForm";
+import Loading from "../components/ui/Loading";
 
 export default function LoginPage() {
+  const { isAuthenticated, isInitializing } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    navigate("/dashboard");
-  };
+  useEffect(() => {
+    if (!isInitializing && isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, isInitializing, navigate]);
 
-  return (
-    <form onSubmit={handleLogin} className="space-y-6">
-      <Input
-        label="E-mail"
-        type="email"
-        required
-        placeholder="seu-email@empresa.com"
-      />
-      <Input
-        label="Senha"
-        type="password"
-        required
-        placeholder="••••••••"
-      />
-      <Button
-        type="submit"
-        className="w-full py-3"
-      >
-        Entrar
-      </Button>
-    </form>
-  );
+  if (isInitializing) {
+    return <Loading message="Carregando..." className="py-6" />;
+  }
+
+  if (isAuthenticated) {
+    return null;
+  }
+
+  return <LoginForm />;
 }
