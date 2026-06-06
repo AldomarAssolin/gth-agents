@@ -1,5 +1,8 @@
 import { useParams, Link } from "react-router-dom";
-import Layout from "../layouts/Layout";
+import PageHeader from "../components/layout/PageHeader";
+import Badge from "../components/ui/Badge";
+import Card from "../components/ui/Card";
+import EmptyState from "../components/ui/EmptyState";
 
 const mockEvolucoes = {
   1: [
@@ -24,51 +27,50 @@ export default function EvolucaoColaboradorPage() {
   const evolucoes = mockEvolucoes[id] || [];
 
   return (
-    <Layout>
-      <div className="space-y-6">
-        <div className="flex items-center space-x-4">
-          <Link
-            to={`/colaboradores/${id}`}
-            className="text-slate-400 hover:text-white transition-colors"
-          >
-            &larr; Voltar para Detalhes
-          </Link>
-        </div>
-
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Evolução do Colaborador</h1>
-          <p className="text-indigo-400 mt-1">Histórico de acompanhamento de {nomeColaborador}</p>
-        </div>
-
-        <div className="space-y-4">
-          {evolucoes.length === 0 ? (
-            <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-md p-6 text-center text-slate-400">
-              Nenhum registro de evolução encontrado para este colaborador.
-            </div>
-          ) : (
-            evolucoes.map((evolucao, index) => (
-              <div
-                key={index}
-                className="bg-slate-800 rounded-xl border border-slate-700 shadow-md p-6 flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-sm text-indigo-400 font-semibold bg-indigo-500/10 px-2.5 py-0.5 rounded-full border border-indigo-500/25">
-                      {evolucao.tipo}
-                    </span>
-                    <span className="text-sm text-slate-400">{evolucao.data}</span>
-                  </div>
-                  <p className="text-slate-300">{evolucao.anotacao}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-slate-400 block font-medium">Nota / Score</span>
-                  <span className="text-lg font-bold text-emerald-400">{evolucao.score}</span>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+    <div className="space-y-6">
+      <div className="flex items-center">
+        <Link
+          to={`/colaboradores/${id}`}
+          className="text-slate-400 hover:text-white transition-colors text-sm font-semibold flex items-center space-x-1.5"
+        >
+          <span>&larr; Voltar para Detalhes</span>
+        </Link>
       </div>
-    </Layout>
+
+      <PageHeader
+        title="Histórico de Evolução"
+        description={`Registro de feedforwards, feedbacks e avaliações de ${nomeColaborador}`}
+      />
+
+      <div className="space-y-4">
+        {evolucoes.length === 0 ? (
+          <EmptyState
+            title="Nenhum registro de evolução"
+            message="Não há avaliações ou feedbacks registrados para este colaborador até o momento."
+          />
+        ) : (
+          evolucoes.map((evolucao, index) => (
+            <Card
+              key={index}
+              className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0"
+            >
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3">
+                  <Badge variant="info">
+                    {evolucao.tipo}
+                  </Badge>
+                  <span className="text-sm text-slate-400">{evolucao.data}</span>
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed">{evolucao.anotacao}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <span className="text-xs text-slate-500 block font-semibold uppercase tracking-wider">Nota / Score</span>
+                <span className="text-lg font-bold text-emerald-400">{evolucao.score}</span>
+              </div>
+            </Card>
+          ))
+        )}
+      </div>
+    </div>
   );
 }
