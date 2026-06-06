@@ -1,41 +1,50 @@
-import Layout from "../layouts/Layout";
+import PageHeader from "../components/layout/PageHeader";
+import Card from "../components/ui/Card";
 
 export default function DashboardPage() {
   return (
-    <Layout>
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+    <div className="space-y-6">
+      <PageHeader
+        title="Dashboard"
+        description="Visão geral do sistema de gerenciamento de talentos e agentes de IA"
+      />
+
+      {/* Dashboard Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="flex flex-col justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
-            <p className="text-slate-400 mt-1">Visão geral do sistema e agentes</p>
-          </div>
-        </div>
-
-        {/* Dashboard Placeholder Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-md">
             <h3 className="text-sm font-medium text-slate-400">Total de Colaboradores</h3>
-            <p className="text-3xl font-semibold text-white mt-2">12</p>
+            <p className="text-3xl font-bold text-white mt-2">12</p>
           </div>
-          <div className="p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-md">
+          <p className="text-xs text-slate-500 mt-4">2 adicionados este mês</p>
+        </Card>
+        
+        <Card className="flex flex-col justify-between">
+          <div>
             <h3 className="text-sm font-medium text-slate-400">Agentes Ativos</h3>
-            <p className="text-3xl font-semibold text-indigo-400 mt-2">4</p>
+            <p className="text-3xl font-bold text-indigo-400 mt-2">4</p>
           </div>
-          <div className="p-6 bg-slate-800 rounded-xl border border-slate-700 shadow-md">
-            <h3 className="text-sm font-medium text-slate-400">Avaliações Pendentes</h3>
-            <p className="text-3xl font-semibold text-emerald-400 mt-2">3</p>
-          </div>
-        </div>
+          <p className="text-xs text-indigo-500/80 mt-4">Todos operando normalmente</p>
+        </Card>
 
-        {/* Info Box */}
-        <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-md">
-          <h2 className="text-xl font-semibold text-white mb-4">Bem-vindo ao GTH Agents</h2>
-          <p className="text-slate-300 leading-relaxed">
-            Esta é a base do sistema frontend, configurada com React, Vite, Tailwind CSS e Docker.
-            Utilize o menu de navegação acima para acessar a lista de colaboradores e testar o roteador.
-          </p>
-        </div>
+        <Card className="flex flex-col justify-between">
+          <div>
+            <h3 className="text-sm font-medium text-slate-400">Avaliações Pendentes</h3>
+            <p className="text-3xl font-bold text-emerald-400 mt-2">3</p>
+          </div>
+          <p className="text-xs text-emerald-500/80 mt-4">Prazo termina em 5 dias</p>
+        </Card>
       </div>
-    </Layout>
+
+      {/* Welcome / Info Block */}
+      <Card>
+        <h2 className="text-xl font-bold text-white mb-4">GTH Agents - Base Visual</h2>
+        <p className="text-slate-300 leading-relaxed">
+          Esta é a nova estrutura visual da aplicação. Utilizamos uma navegação lateral integrada 
+          com layouts dinâmicos e componentes UI reutilizáveis sob a stack do Tailwind CSS. 
+          Use o menu de navegação à esquerda para explorar as demais rotas configuradas.
+        </p>
+      </Card>
+    </div>
   );
 }

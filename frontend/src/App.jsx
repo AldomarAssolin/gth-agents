@@ -1,23 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
-import ColaboradoresPage from "./pages/ColaboradoresPage";
-import ColaboradorDetalhePage from "./pages/ColaboradorDetalhePage";
-import EvolucaoColaboradorPage from "./pages/EvolucaoColaboradorPage";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/colaboradores" element={<ColaboradoresPage />} />
-        <Route path="/colaboradores/:id" element={<ColaboradorDetalhePage />} />
-        <Route path="/colaboradores/:id/evolucao" element={<EvolucaoColaboradorPage />} />
-        {/* Fallback route */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }
