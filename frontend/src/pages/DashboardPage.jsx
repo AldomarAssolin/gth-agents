@@ -1,50 +1,153 @@
+import { useState, useEffect } from "react";
 import PageHeader from "../components/layout/PageHeader";
-import Card from "../components/ui/Card";
+import Loading from "../components/ui/Loading";
+import ErrorMessage from "../components/ui/ErrorMessage";
+import Button from "../components/ui/Button";
+
+import { getDashboardMVP } from "../features/dashboard/dashboardService";
+import ResumoGeral from "../features/dashboard/ResumoGeral";
+import DistribuicaoPerfis from "../features/dashboard/DistribuicaoPerfis";
+import AlertasDashboard from "../features/dashboard/AlertasDashboard";
+import UltimasAvaliacoes from "../features/dashboard/UltimasAvaliacoes";
+import UltimosFeedbacks from "../features/dashboard/UltimosFeedbacks";
+import UltimosReconhecimentos from "../features/dashboard/UltimosReconhecimentos";
 
 export default function DashboardPage() {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [status403, setStatus403] = useState(false);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  const fetchDashboard = async () => {
+    setLoading(true);
+    setError(null);
+    setStatus403(false);
+    try {
+      const data = await getDashboardMVP();
+      setDashboardData(data);
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        setStatus403(true);
+      } else if (err.response) {
+        setError(
+          err.response.data?.message ||
+            "Não foi possível carregar as informações do dashboard."
+        );
+      } else if (err.request) {
+        setError(
+          "Não foi possível conectar à API. Verifique se o servidor está em execução."
+        );
+      } else {
+        setError("Erro inesperado ao carregar o dashboard.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getDashboardMVP()
+      .then((data) => {
+        if (isMounted) {
+          setDashboardData(data);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          if (err.response && err.response.status === 403) {
+            setStatus403(true);
+          } else if (err.response) {
+            setError(
+              err.response.data?.message ||
+                "Não foi possível carregar as informações do dashboard."
+            );
+          } else if (err.request) {
+            setError(
+              "Não foi possível conectar à API. Verifique se o servidor está em execução."
+            );
+          } else {
+            setError("Erro inesperado ao carregar o dashboard.");
+          }
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Dashboard"
+          description="Visão geral do sistema de gerenciamento de talentos e agentes de IA"
+        />
+        <Loading message="Carregando dados do dashboard..." />
+      </div>
+    );
+  }
+
+  if (status403) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Dashboard"
+          description="Visão geral do sistema de gerenciamento de talentos e agentes de IA"
+        />
+        <ErrorMessage
+          title="Acesso Negado"
+          message="Você não possui permissão para acessar o dashboard geral."
+        />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Dashboard"
+          description="Visão geral do sistema de gerenciamento de talentos e agentes de IA"
+        />
+        <div className="space-y-4">
+          <ErrorMessage title="Erro de Carregamento" message={error} />
+          <div>
+            <Button onClick={fetchDashboard} variant="primary">
+              Tentar novamente
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <PageHeader
         title="Dashboard"
         description="Visão geral do sistema de gerenciamento de talentos e agentes de IA"
       />
 
-      {/* Dashboard Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-medium text-slate-400">Total de Colaboradores</h3>
-            <p className="text-3xl font-bold text-white mt-2">12</p>
-          </div>
-          <p className="text-xs text-slate-500 mt-4">2 adicionados este mês</p>
-        </Card>
-        
-        <Card className="flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-medium text-slate-400">Agentes Ativos</h3>
-            <p className="text-3xl font-bold text-indigo-400 mt-2">4</p>
-          </div>
-          <p className="text-xs text-indigo-500/80 mt-4">Todos operando normalmente</p>
-        </Card>
+      {/* 1. Resumo Geral de Métricas e Detalhes de Metas/PDIs */}
+      <ResumoGeral data={dashboardData} />
 
-        <Card className="flex flex-col justify-between">
-          <div>
-            <h3 className="text-sm font-medium text-slate-400">Avaliações Pendentes</h3>
-            <p className="text-3xl font-bold text-emerald-400 mt-2">3</p>
-          </div>
-          <p className="text-xs text-emerald-500/80 mt-4">Prazo termina em 5 dias</p>
-        </Card>
+      {/* 2. Distribuição e Alertas */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <DistribuicaoPerfis data={dashboardData} />
+        <AlertasDashboard data={dashboardData} />
       </div>
 
-      {/* Welcome / Info Block */}
-      <Card>
-        <h2 className="text-xl font-bold text-white mb-4">GTH Agents - Base Visual</h2>
-        <p className="text-slate-300 leading-relaxed">
-          Esta é a nova estrutura visual da aplicação. Utilizamos uma navegação lateral integrada 
-          com layouts dinâmicos e componentes UI reutilizáveis sob a stack do Tailwind CSS. 
-          Use o menu de navegação à esquerda para explorar as demais rotas configuradas.
-        </p>
-      </Card>
+      {/* 3. Últimos Registros */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <UltimasAvaliacoes data={dashboardData} />
+        <UltimosFeedbacks data={dashboardData} />
+        <UltimosReconhecimentos data={dashboardData} />
+      </div>
     </div>
   );
 }
