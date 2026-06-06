@@ -1,30 +1,78 @@
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import PageHeader from "../components/layout/PageHeader";
-import Card from "../components/ui/Card";
-import Badge from "../components/ui/Badge";
+import Loading from "../components/ui/Loading";
+import ErrorMessage from "../components/ui/ErrorMessage";
 import Button from "../components/ui/Button";
-
-const mockColaboradoresMap = {
-  1: { nome: "João Silva", cargo: "Desenvolvedor Backend", status: "Ativo", email: "joao.silva@empresa.com", dataAdmissao: "2024-01-15" },
-  2: { nome: "Maria Santos", cargo: "Desenvolvedora Frontend", status: "Ativo", email: "maria.santos@empresa.com", dataAdmissao: "2024-03-10" },
-  3: { nome: "Pedro Souza", cargo: "Product Owner", status: "Inativo", email: "pedro.souza@empresa.com", dataAdmissao: "2023-06-20" },
-};
+import ColaboradorDetalhe from "../features/colaboradores/ColaboradorDetalhe";
+import {
+  buscarColaboradorPorId,
+  listarSetores,
+  listarFuncoes,
+} from "../features/colaboradores/colaboradoresService";
+import { getColaboradorErrorMessage } from "../features/colaboradores/colaboradoresErrors";
 
 export default function ColaboradorDetalhePage() {
   const { id } = useParams();
-  const colaborador = mockColaboradoresMap[id] || {
-    nome: "Não encontrado",
-    cargo: "Desconhecido",
-    status: "Inativo",
-    email: "n/a",
-    dataAdmissao: "n/a"
-  };
+  const colaboradorId = Number(id);
+  const idValido = Number.isInteger(colaboradorId) && colaboradorId > 0;
 
-  const actions = (
-    <Link to={`/colaboradores/${id}/evolucao`}>
-      <Button variant="primary">Ver Evolução</Button>
-    </Link>
+  const [colaborador, setColaborador] = useState(null);
+  const [setores, setSetores] = useState([]);
+  const [funcoes, setFuncoes] = useState([]);
+  const [loading, setLoading] = useState(idValido);
+  const [error, setError] = useState(
+    idValido ? "" : "Identificador de colaborador inválido."
   );
+  const [retryTrigger, setRetryTrigger] = useState(0);
+
+  useEffect(() => {
+    if (!idValido) return;
+
+    const controller = new AbortController();
+
+    const carregarDetalhes = async () => {
+      try {
+        const colabData = await buscarColaboradorPorId(colaboradorId, {
+          signal: controller.signal,
+        });
+
+        const [setoresResult, funcoesResult] = await Promise.allSettled([
+          listarSetores({ signal: controller.signal }),
+          listarFuncoes({ signal: controller.signal }),
+        ]);
+
+        const setoresData =
+          setoresResult.status === "fulfilled" ? setoresResult.value : [];
+        const funcoesData =
+          funcoesResult.status === "fulfilled" ? funcoesResult.value : [];
+
+        setColaborador(colabData);
+        setSetores(setoresData);
+        setFuncoes(funcoesData);
+      } catch (err) {
+        if (err.code !== "ERR_CANCELED" && err.name !== "CanceledError") {
+          setError(getColaboradorErrorMessage(err));
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    carregarDetalhes();
+
+    return () => {
+      controller.abort();
+    };
+  }, [colaboradorId, idValido, retryTrigger]);
+
+  const handleRetry = () => {
+    setLoading(true);
+    setError("");
+    setRetryTrigger((prev) => prev + 1);
+  };
 
   return (
     <div className="space-y-6">
@@ -37,36 +85,37 @@ export default function ColaboradorDetalhePage() {
         </Link>
       </div>
 
-      <PageHeader
-        title={colaborador.nome}
-        description={colaborador.cargo}
-        actions={colaborador.nome !== "Não encontrado" ? actions : null}
-      />
-
-      <Card>
-        <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-6 border-b border-slate-700">
-          <div>
-            <h2 className="text-xl font-bold text-white">Dados do Colaborador</h2>
-            <p className="text-slate-400 text-sm mt-1">Informações básicas do cadastro institucional</p>
-          </div>
-          <div className="mt-4 md:mt-0">
-            <Badge variant={colaborador.status === "Ativo" ? "success" : "secondary"}>
-              {colaborador.status}
-            </Badge>
-          </div>
+      {loading ? (
+        <Loading message="Carregando detalhes do colaborador..." />
+      ) : error ? (
+        <div className="space-y-4">
+          <ErrorMessage title="Erro ao carregar detalhes" message={error} />
+          {idValido && (
+            <div>
+              <Button onClick={handleRetry} variant="primary">
+                Tentar novamente
+              </Button>
+            </div>
+          )}
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h3 className="text-sm font-medium text-slate-400">E-mail Corporativo</h3>
-            <p className="text-white text-lg mt-1 font-semibold">{colaborador.email}</p>
-          </div>
-          <div>
-            <h3 className="text-sm font-medium text-slate-400">Data de Admissão</h3>
-            <p className="text-white text-lg mt-1 font-semibold">{colaborador.dataAdmissao}</p>
-          </div>
-        </div>
-      </Card>
+      ) : colaborador ? (
+        <>
+          <PageHeader
+            title={colaborador.nome}
+            description={`Matrícula: ${colaborador.matricula}`}
+          />
+          <ColaboradorDetalhe
+            colaborador={colaborador}
+            setores={setores}
+            funcoes={funcoes}
+          />
+        </>
+      ) : (
+        <ErrorMessage
+          title="Colaborador não encontrado"
+          message="Não foi possível recuperar as informações do colaborador selecionado."
+        />
+      )}
     </div>
   );
 }
