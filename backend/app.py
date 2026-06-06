@@ -1,4 +1,5 @@
-from flask import Flask
+import os
+from flask import Flask, request
 
 from app.config import Config
 from app.extensions import db
@@ -32,9 +33,27 @@ def create_app(config_class: type[Config] = Config) -> Flask:
     app.register_blueprint(pdis_interface_bp)
     app.register_blueprint(reconhecimentos_interface_bp)
     app.register_blueprint(dashboard_interface_bp)
+    cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
 
+    @app.before_request
+    def handle_options_preflight():
+        if request.method == "OPTIONS":
+            origin = request.headers.get("Origin")
+            if origin in cors_origins:
+                response = app.make_default_options_response()
+                response.headers["Access-Control-Allow-Origin"] = origin
+                response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+                response.headers["Access-Control-Allow-Methods"] = "GET,PUT,POST,DELETE,OPTIONS"
+                return response
 
-
+    @app.after_request
+    def add_cors_headers(response):
+        origin = request.headers.get("Origin")
+        if origin in cors_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Headers"] = "Content-Type,Authorization"
+            response.headers["Access-Control-Allow-Methods"] = "GET,PUT,POST,DELETE,OPTIONS"
+        return response
 
     register_error_handlers(app)
 

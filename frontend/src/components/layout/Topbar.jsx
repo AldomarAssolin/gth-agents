@@ -1,10 +1,22 @@
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/useAuth";
 
 export default function Topbar() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
+    logout();
     navigate("/login");
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "U";
+    const parts = name.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -16,10 +28,22 @@ export default function Topbar() {
       {/* User menu and Logout */}
       <div className="flex items-center space-x-6">
         <div className="flex items-center space-x-3">
-          <div className="h-8 w-8 rounded-full bg-indigo-500/20 border border-indigo-500/35 flex items-center justify-center text-indigo-400 font-bold text-sm">
-            AA
+          <div 
+            className="h-8 w-8 rounded-full bg-indigo-500/20 border border-indigo-500/35 flex items-center justify-center text-indigo-400 font-bold text-sm"
+            title={user?.email || ""}
+          >
+            {getInitials(user?.nome || user?.email || "U")}
           </div>
-          <span className="text-slate-200 text-sm font-semibold">Aldomar Assolin</span>
+          <div className="flex flex-col">
+            <span className="text-slate-200 text-sm font-semibold leading-tight">
+              {user?.nome || user?.email || "Usuário"}
+            </span>
+            {user?.perfil && (
+              <span className="text-slate-400 text-[10px] uppercase tracking-wider font-bold mt-0.5">
+                {user.perfil}
+              </span>
+            )}
+          </div>
         </div>
         
         <div className="border-l border-slate-700 h-6"></div>
