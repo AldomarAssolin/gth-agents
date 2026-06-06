@@ -1,7 +1,6 @@
 services:
   api:
-    build:
-      context: ./backend
+    build: .
     environment:
       FLASK_APP: ${FLASK_APP:-app:create_app}
       FLASK_ENV: ${FLASK_ENV:-development}
@@ -13,19 +12,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./backend:/app
-
-  web:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
-    ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-    environment:
-      - VITE_API_URL=http://localhost:5000
+      - .:/app
 
   db:
     image: postgres:16-alpine
@@ -33,7 +20,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-gth_agents}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-    # Porta do PostgreSQL não exposta externamente por segurança
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-gth_agents}"]
       interval: 5s

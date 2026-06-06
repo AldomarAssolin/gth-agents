@@ -1,11 +1,19 @@
-# GTH Agents - Documentação da API
+# Documentação do Monorepo GTH Agents
 
-Bem-vindo à documentação técnica do MVP backend do GTH Agents. Este diretório centraliza a especificação de arquitetura, contratos e fluxos de teste.
+Este monorepo contém os seguintes projetos e serviços:
 
-## Documentos Disponíveis
+## Estrutura de Diretórios
+- `backend/`: API em Flask desenvolvida com foco em Clean Architecture.
+- `frontend/`: Aplicação Web desenvolvida com React, Vite e TailwindCSS.
+- `docs/`: Central de documentação e manuais do projeto.
 
-- **[Visão Geral do Backend (docs/MVP_BACKEND.md)](file:///home/aldomar/Workspaces/projects/antigravity/gth-agents/docs/MVP_BACKEND.md)**: Apresentação da plataforma, arquitetura Clean, tecnologias da stack, instruções para execução local com Docker, migrações e testes.
-- **[Autenticação e Escopos (docs/AUTH.md)](file:///home/aldomar/Workspaces/projects/antigravity/gth-agents/docs/AUTH.md)**: Login via JWT, controle de perfis de usuário (RBAC) e regras finas de restrição de escopo de dados.
-- **[Contratos de Endpoints (docs/API.md)](file:///home/aldomar/Workspaces/projects/antigravity/gth-agents/docs/API.md)**: Lista completa de rotas HTTP com payloads de requisição, respostas esperadas e permissões.
-- **[Fluxo de Teste Manual (docs/POSTMAN_FLOW.md)](file:///home/aldomar/Workspaces/projects/antigravity/gth-agents/docs/POSTMAN_FLOW.md)**: Sequência de passos para validar o fluxo principal ponta a ponta usando a Collection do Postman.
-- **[Ambiente e Coleção de Testes (postman/)](file:///home/aldomar/Workspaces/projects/antigravity/gth-agents/postman/)**: Arquivos `.json` importáveis no Postman para executar as requisições em cadeia.
+## Execução com Docker (Desenvolvimento)
+Para subir todos os serviços de desenvolvimento (PostgreSQL, Flask e React) em containers:
+```bash
+docker compose up -d
+```
+
+### Endereços Locais
+- **Frontend (Web)**: http://localhost:5173
+- **Backend (API)**: http://localhost:5000
+- **Health check da API**: http://localhost:5000/health
