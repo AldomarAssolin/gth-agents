@@ -86,15 +86,11 @@ export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes 
             </Button>
           </Link>
 
-          <Button
-            variant="outline"
-            className="w-full justify-center"
-            disabled
-            aria-disabled="true"
-            title="Disponível em breve"
-          >
-            Registrar Avaliação (Em breve)
-          </Button>
+          <Link to={`/avaliacoes/nova?colaborador_id=${colaborador.id}`} className="w-full">
+            <Button variant="outline" className="w-full justify-center">
+              Registrar Avaliação
+            </Button>
+          </Link>
 
           <Button
             variant="outline"

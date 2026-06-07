@@ -25,7 +25,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:5000
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:5000}
 
   db:
     image: postgres:16-alpine
@@ -33,9 +33,14 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-gth_agents}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-    # Porta do PostgreSQL não exposta externamente por segurança
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-gth_agents}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-gth_agents}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 5

@@ -10,6 +10,7 @@ import NovoColaboradorPage from "../pages/NovoColaboradorPage";
 import ColaboradorDetalhePage from "../pages/ColaboradorDetalhePage";
 import EvolucaoColaboradorPage from "../pages/EvolucaoColaboradorPage";
 import AvaliacoesPage from "../pages/AvaliacoesPage";
+import NovaAvaliacaoPage from "../pages/NovaAvaliacaoPage";
 import MetasPage from "../pages/MetasPage";
 import PDISPage from "../pages/PDISPage";
 import FeedbacksPage from "../pages/FeedbacksPage";
@@ -35,6 +36,7 @@ export default function AppRoutes() {
           <Route path="/colaboradores/:id" element={<ColaboradorDetalhePage />} />
           <Route path="/colaboradores/:id/evolucao" element={<EvolucaoColaboradorPage />} />
           <Route path="/avaliacoes" element={<AvaliacoesPage />} />
+          <Route path="/avaliacoes/nova" element={<NovaAvaliacaoPage />} />
           <Route path="/metas" element={<MetasPage />} />
           <Route path="/pdis" element={<PDISPage />} />
           <Route path="/feedbacks" element={<FeedbacksPage />} />
