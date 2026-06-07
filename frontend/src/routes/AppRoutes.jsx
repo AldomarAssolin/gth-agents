@@ -12,6 +12,8 @@ import EvolucaoColaboradorPage from "../pages/EvolucaoColaboradorPage";
 import AvaliacoesPage from "../pages/AvaliacoesPage";
 import NovaAvaliacaoPage from "../pages/NovaAvaliacaoPage";
 import MetasPage from "../pages/MetasPage";
+import NovaMetaPage from "../pages/NovaMetaPage";
+import MetasColaboradorPage from "../pages/MetasColaboradorPage";
 import PDISPage from "../pages/PDISPage";
 import FeedbacksPage from "../pages/FeedbacksPage";
 import ReconhecimentosPage from "../pages/ReconhecimentosPage";
@@ -38,6 +40,8 @@ export default function AppRoutes() {
           <Route path="/avaliacoes" element={<AvaliacoesPage />} />
           <Route path="/avaliacoes/nova" element={<NovaAvaliacaoPage />} />
           <Route path="/metas" element={<MetasPage />} />
+          <Route path="/metas/nova" element={<NovaMetaPage />} />
+          <Route path="/colaboradores/:id/metas" element={<MetasColaboradorPage />} />
           <Route path="/pdis" element={<PDISPage />} />
           <Route path="/feedbacks" element={<FeedbacksPage />} />
           <Route path="/reconhecimentos" element={<ReconhecimentosPage />} />
