@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Card from "../../components/ui/Card";
 import Button from "../../components/ui/Button";
 import StatusColaboradorBadge from "./StatusColaboradorBadge";
+import { useAuth } from "../auth/useAuth";
 import {
   resolverNomeSetor,
   resolverNomeFuncao,
@@ -9,6 +10,8 @@ import {
 } from "./colaboradoresHelpers";
 
 export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes = [] }) {
+  const { user } = useAuth();
+  const canCreateMeta = ["ADMIN", "RH", "LIDER"].includes(user?.perfil);
   const resolvedSetor = resolverNomeSetor(colaborador, setores);
   const resolvedFuncao = resolverNomeFuncao(colaborador, funcoes);
 
@@ -92,15 +95,29 @@ export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes 
             </Button>
           </Link>
 
-          <Button
-            variant="outline"
-            className="w-full justify-center"
-            disabled
-            aria-disabled="true"
-            title="Disponível em breve"
-          >
-            Criar Meta (Em breve)
-          </Button>
+          {canCreateMeta ? (
+            <Link to={`/metas/nova?colaborador_id=${colaborador.id}`} className="w-full">
+              <Button variant="outline" className="w-full justify-center">
+                Criar Meta
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full justify-center"
+              disabled
+              aria-disabled="true"
+              title="Apenas Líderes, RH ou Admins podem criar metas"
+            >
+              Criar Meta
+            </Button>
+          )}
+
+          <Link to={`/colaboradores/${colaborador.id}/metas`} className="w-full">
+            <Button variant="outline" className="w-full justify-center">
+              Ver Metas
+            </Button>
+          </Link>
 
           <Button
             variant="outline"
