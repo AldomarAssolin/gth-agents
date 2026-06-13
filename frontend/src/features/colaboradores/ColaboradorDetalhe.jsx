@@ -119,15 +119,29 @@ export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes 
             </Button>
           </Link>
 
-          <Button
-            variant="outline"
-            className="w-full justify-center"
-            disabled
-            aria-disabled="true"
-            title="Disponível em breve"
-          >
-            Criar PDI (Em breve)
-          </Button>
+          {canCreateMeta ? (
+            <Link to={`/pdis/novo?colaborador_id=${colaborador.id}`} className="w-full">
+              <Button variant="outline" className="w-full justify-center">
+                Criar PDI
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full justify-center"
+              disabled
+              aria-disabled="true"
+              title="Apenas Líderes, RH ou Admins podem criar PDIs"
+            >
+              Criar PDI
+            </Button>
+          )}
+
+          <Link to={`/colaboradores/${colaborador.id}/pdis`} className="w-full">
+            <Button variant="outline" className="w-full justify-center">
+              Ver PDIs
+            </Button>
+          </Link>
 
           <Button
             variant="outline"
