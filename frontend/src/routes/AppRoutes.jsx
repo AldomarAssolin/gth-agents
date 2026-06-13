@@ -15,6 +15,10 @@ import MetasPage from "../pages/MetasPage";
 import NovaMetaPage from "../pages/NovaMetaPage";
 import MetasColaboradorPage from "../pages/MetasColaboradorPage";
 import PDISPage from "../pages/PDISPage";
+import NovoPDIPage from "../pages/NovoPDIPage";
+import EditarPDIPage from "../pages/EditarPDIPage";
+import PDIDetalhePage from "../pages/PDIDetalhePage";
+import PDIsColaboradorPage from "../pages/PDIsColaboradorPage";
 import FeedbacksPage from "../pages/FeedbacksPage";
 import ReconhecimentosPage from "../pages/ReconhecimentosPage";
 import ConfiguracoesPage from "../pages/ConfiguracoesPage";
@@ -43,6 +47,10 @@ export default function AppRoutes() {
           <Route path="/metas/nova" element={<NovaMetaPage />} />
           <Route path="/colaboradores/:id/metas" element={<MetasColaboradorPage />} />
           <Route path="/pdis" element={<PDISPage />} />
+          <Route path="/pdis/novo" element={<NovoPDIPage />} />
+          <Route path="/pdis/:id" element={<PDIDetalhePage />} />
+          <Route path="/pdis/:id/editar" element={<EditarPDIPage />} />
+          <Route path="/colaboradores/:id/pdis" element={<PDIsColaboradorPage />} />
           <Route path="/feedbacks" element={<FeedbacksPage />} />
           <Route path="/reconhecimentos" element={<ReconhecimentosPage />} />
           <Route path="/configuracoes" element={<ConfiguracoesPage />} />
