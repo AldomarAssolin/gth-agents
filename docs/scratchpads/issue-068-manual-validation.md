@@ -196,6 +196,30 @@ corroborando com o esperado, também foi renderizado um alerta de erro vermelho 
 
 ---
 
+### Cenário 7 - Navegação entre Edições de PDIs Distintos sem Reload
+- **Tipo**: `MANUAL_FUNCIONAL`
+- **Objetivo**: Garantir que a navegação direta entre as páginas de edição de dois PDIs distintos sem reload limpe os erros de submissão e o formulário anterior.
+- **Pré-condições**: Dois PDIs ativos e editáveis cadastrados no banco (ex: ID 9 e ID 10).
+- **Passos**:
+  1. Acessar a página de edição do primeiro PDI (ex: `/pdis/9/editar`).
+  2. Com o backend desligado, tentar submeter o formulário para gerar um erro de submissão (`submitError` vermelho no topo).
+  3. Mantendo a API desligada, digite e acesse na barra de endereços a URL de edição do outro PDI (ex: `/pdis/10/editar`) ou simule transição interna sem reload.
+  4. Ligue a API para permitir o carregamento do segundo PDI e observe o comportamento da tela.
+- **Resultado esperado**:
+  - O estado anterior de `submitError` do primeiro PDI deve ser limpo imediatamente ao iniciar o carregamento.
+  - O formulário com os dados anteriores deve ser desmarcado/limpo enquanto o novo carrega.
+  - Após o carregamento do segundo PDI, a tela exibe o formulário dele sem nenhum erro residual da submissão do primeiro.
+- **Resultado observado**:
+- **Status HTTP observado**: O estado do PDI foi limpo ao carregar o novo PDI.
+
+![alt text](../frontend/imagens/issue_068_pdi_transicao_limpa.png)
+
+- **Resultado**: `APROVADO`
+- **Evidências**:
+  - Screenshot sugerido: `issue_068_pdi_transicao_limpa.png`
+
+---
+
 ## Evidências geradas
 
 O validador humano deve preencher esta tabela indicando a localização de cada evidência capturada durante o teste:
@@ -207,6 +231,7 @@ O validador humano deve preencher esta tabela indicando a localização de cada 
 | Cenário 3 | Screenshot | `docs/frontend/imagens/issue_068_editar_pdi_erro_conexao.png` | |
 | Cenário 4 | Screenshot | `docs/frontend/imagens/issue_068_meta_erro_validacao.png` | |
 | Cenário 5 | Screenshot | `docs/frontend/imagens/issue_068_pdi_erro_validacao_datas.png` | |
+| Cenário 7 | Screenshot | `docs/frontend/imagens/issue_068_pdi_transicao_limpa.png` | |
 
 ---
 

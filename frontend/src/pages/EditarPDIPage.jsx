@@ -32,15 +32,19 @@ export default function EditarPDIPage() {
       try {
         setLoading(true);
         setLoadError("");
+        setSubmitError("");
+        setPdi(null);
         const data = await buscarPDI(pdiId, { signal: controller.signal });
         
+        if (controller.signal.aborted) return;
+
         if (data.status === "CONCLUIDO" || data.status === "CANCELADO") {
           setLoadError(`Este PDI já está ${data.status.toLowerCase()} e não pode ser editado.`);
         } else {
           setPdi(data);
         }
       } catch (err) {
-        if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED") {
+        if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED" && !controller.signal.aborted) {
           setLoadError(getPDIErrorMessage(err));
         }
       } finally {
@@ -76,7 +80,7 @@ export default function EditarPDIPage() {
   if (!isIdValido) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <ErrorMessage title="ID Inválido" message={loadError} />
+        <ErrorMessage title="ID Inválido" message="Identificador de PDI inválido." />
         <div className="mt-4">
           <Button onClick={() => navigate("/pdis")} variant="secondary">
             Voltar para lista
