@@ -21,6 +21,8 @@ import PDIDetalhePage from "../pages/PDIDetalhePage";
 import PDIsColaboradorPage from "../pages/PDIsColaboradorPage";
 import FeedbacksPage from "../pages/FeedbacksPage";
 import ReconhecimentosPage from "../pages/ReconhecimentosPage";
+import NovoReconhecimentoPage from "../pages/NovoReconhecimentoPage";
+import ReconhecimentosColaboradorPage from "../pages/ReconhecimentosColaboradorPage";
 import ConfiguracoesPage from "../pages/ConfiguracoesPage";
 
 import PrivateRoute from "../features/auth/PrivateRoute";
@@ -53,6 +55,8 @@ export default function AppRoutes() {
           <Route path="/colaboradores/:id/pdis" element={<PDIsColaboradorPage />} />
           <Route path="/feedbacks" element={<FeedbacksPage />} />
           <Route path="/reconhecimentos" element={<ReconhecimentosPage />} />
+          <Route path="/reconhecimentos/novo" element={<NovoReconhecimentoPage />} />
+          <Route path="/colaboradores/:id/reconhecimentos" element={<ReconhecimentosColaboradorPage />} />
           <Route path="/configuracoes" element={<ConfiguracoesPage />} />
         </Route>
       </Route>
