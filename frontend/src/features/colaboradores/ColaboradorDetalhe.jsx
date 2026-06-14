@@ -153,6 +153,30 @@ export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes 
             Registrar Feedback (Em breve)
           </Button>
 
+          {canCreateMeta ? (
+            <Link to={`/reconhecimentos/novo?colaborador_id=${colaborador.id}`} className="w-full">
+              <Button variant="outline" className="w-full justify-center">
+                Registrar Reconhecimento
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              variant="outline"
+              className="w-full justify-center"
+              disabled
+              aria-disabled="true"
+              title="Apenas Líderes, RH ou Admins podem registrar reconhecimentos"
+            >
+              Registrar Reconhecimento
+            </Button>
+          )}
+
+          <Link to={`/colaboradores/${colaborador.id}/reconhecimentos`} className="w-full">
+            <Button variant="outline" className="w-full justify-center">
+              Ver Reconhecimentos
+            </Button>
+          </Link>
+
           <Button
             variant="outline"
             className="w-full justify-center"
@@ -160,7 +184,7 @@ export default function ColaboradorDetalhe({ colaborador, setores = [], funcoes 
             aria-disabled="true"
             title="Disponível em breve"
           >
-            Registrar Reconhecimento (Em breve)
+            Registrar Feedback (Em breve)
           </Button>
         </div>
       </Card>
