@@ -19,7 +19,8 @@ export default function EditarPDIPage() {
 
   const [pdi, setPdi] = useState(null);
   const [loading, setLoading] = useState(isPermitted && isIdValido);
-  const [error, setError] = useState(isIdValido ? "" : "Identificador de PDI inválido.");
+  const [loadError, setLoadError] = useState(isIdValido ? "" : "Identificador de PDI inválido.");
+  const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -30,17 +31,17 @@ export default function EditarPDIPage() {
     const carregarPDI = async () => {
       try {
         setLoading(true);
-        setError("");
+        setLoadError("");
         const data = await buscarPDI(pdiId, { signal: controller.signal });
         
         if (data.status === "CONCLUIDO" || data.status === "CANCELADO") {
-          setError(`Este PDI já está ${data.status.toLowerCase()} e não pode ser editado.`);
+          setLoadError(`Este PDI já está ${data.status.toLowerCase()} e não pode ser editado.`);
         } else {
           setPdi(data);
         }
       } catch (err) {
         if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED") {
-          setError(getPDIErrorMessage(err));
+          setLoadError(getPDIErrorMessage(err));
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -75,7 +76,7 @@ export default function EditarPDIPage() {
   if (!isIdValido) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4">
-        <ErrorMessage title="ID Inválido" message={error} />
+        <ErrorMessage title="ID Inválido" message={loadError} />
         <div className="mt-4">
           <Button onClick={() => navigate("/pdis")} variant="secondary">
             Voltar para lista
@@ -89,10 +90,10 @@ export default function EditarPDIPage() {
     return <Loading message="Carregando dados do PDI..." />;
   }
 
-  if (error) {
+  if (loadError) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4 space-y-4">
-        <ErrorMessage title="Erro ao carregar PDI" message={error} />
+        <ErrorMessage title="Erro ao carregar PDI" message={loadError} />
         <div>
           <Button onClick={() => navigate(`/pdis/${pdiId}`)} variant="secondary">
             Voltar para Detalhes
@@ -105,11 +106,11 @@ export default function EditarPDIPage() {
   const handleSubmit = async (formData) => {
     try {
       setIsSubmitting(true);
-      setError("");
+      setSubmitError("");
       await atualizarPDI(pdiId, formData);
       navigate(`/pdis/${pdiId}`); // Screen synchronization via redirect to details page
     } catch (err) {
-      setError(getPDIErrorMessage(err));
+      setSubmitError(getPDIErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -125,7 +126,7 @@ export default function EditarPDIPage() {
           </p>
         </div>
 
-        {error && <ErrorMessage title="Erro ao salvar alterações" message={error} />}
+        {submitError && <ErrorMessage title="Erro ao salvar alterações" message={submitError} />}
 
         {pdi && (
           <PDIForm

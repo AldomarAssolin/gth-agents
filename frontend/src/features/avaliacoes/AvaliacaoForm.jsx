@@ -211,13 +211,6 @@ export default function AvaliacaoForm({
         )}
       </div>
 
-      {/* Footer / Submission */}
-      {errors.submitError && (
-        <div className="p-4 bg-red-500/10 border border-red-500/25 rounded-xl">
-          <p className="text-sm text-red-400">{errors.submitError}</p>
-        </div>
-      )}
-
       <div className="flex items-center justify-end space-x-3 pt-6 border-t border-slate-800">
         <Button variant="secondary" onClick={onCancel} disabled={isSubmitting}>
           Cancelar

@@ -21,7 +21,8 @@ export default function NovaMetaPage() {
 
   const [colaboradores, setColaboradores] = useState([]);
   const [loading, setLoading] = useState(isPermitted);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdMeta, setCreatedMeta] = useState(null);
 
@@ -44,12 +45,12 @@ export default function NovaMetaPage() {
     const carregarColaboradores = async () => {
       try {
         setLoading(true);
-        setError("");
+        setLoadError("");
         const list = await listarColaboradores({ signal: controller.signal });
         setColaboradores(list);
       } catch (err) {
         if (err.code !== "ERR_CANCELED" && err.name !== "CanceledError") {
-          setError("Erro ao carregar lista de colaboradores.");
+          setLoadError("Erro ao carregar lista de colaboradores.");
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -85,10 +86,10 @@ export default function NovaMetaPage() {
     return <Loading message="Carregando dados necessários..." />;
   }
 
-  if (error) {
+  if (loadError) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4 space-y-4">
-        <ErrorMessage title="Erro ao carregar página" message={error} />
+        <ErrorMessage title="Erro ao carregar página" message={loadError} />
         <div>
           <Button onClick={() => navigate("/metas")} variant="secondary">
             Voltar
@@ -108,7 +109,7 @@ export default function NovaMetaPage() {
   const handleSubmit = async (formData) => {
     try {
       setIsSubmitting(true);
-      setError("");
+      setSubmitError("");
 
       // criado_por_id is forced from user.id for security (mitigating backend risk)
       const payload = {
@@ -119,7 +120,7 @@ export default function NovaMetaPage() {
       const result = await criarMeta(payload);
       setCreatedMeta(result);
     } catch (err) {
-      setError(getMetaErrorMessage(err));
+      setSubmitError(getMetaErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -127,7 +128,7 @@ export default function NovaMetaPage() {
 
   const handleCreateAnother = () => {
     setCreatedMeta(null);
-    setError("");
+    setSubmitError("");
   };
 
   if (createdMeta) {
@@ -242,7 +243,7 @@ export default function NovaMetaPage() {
           </p>
         </div>
 
-        {error && <ErrorMessage title="Erro de Validação/Servidor" message={error} />}
+        {submitError && <ErrorMessage title="Erro de Validação/Servidor" message={submitError} />}
 
         <MetaForm
           colaboradores={colaboradores}
