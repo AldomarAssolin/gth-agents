@@ -20,7 +20,8 @@ export default function NovoPDIPage() {
 
   const [colaboradores, setColaboradores] = useState([]);
   const [loading, setLoading] = useState(isPermitted);
-  const [error, setError] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdPdi, setCreatedPdi] = useState(null);
 
@@ -43,12 +44,12 @@ export default function NovoPDIPage() {
     const carregarColaboradores = async () => {
       try {
         setLoading(true);
-        setError("");
+        setLoadError("");
         const list = await listarColaboradores({ signal: controller.signal });
         setColaboradores(list);
       } catch (err) {
         if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED") {
-          setError("Erro ao carregar lista de colaboradores.");
+          setLoadError("Erro ao carregar lista de colaboradores.");
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -84,10 +85,10 @@ export default function NovoPDIPage() {
     return <Loading message="Carregando dados necessários..." />;
   }
 
-  if (error) {
+  if (loadError) {
     return (
       <div className="max-w-4xl mx-auto py-8 px-4 space-y-4">
-        <ErrorMessage title="Erro ao carregar página" message={error} />
+        <ErrorMessage title="Erro ao carregar página" message={loadError} />
         <div>
           <Button onClick={() => navigate("/pdis")} variant="secondary">
             Voltar
@@ -105,12 +106,12 @@ export default function NovoPDIPage() {
   const handleSubmit = async (formData) => {
     try {
       setIsSubmitting(true);
-      setError("");
+      setSubmitError("");
 
       const result = await criarPDI(formData);
       setCreatedPdi(result);
     } catch (err) {
-      setError(getPDIErrorMessage(err));
+      setSubmitError(getPDIErrorMessage(err));
     } finally {
       setIsSubmitting(false);
     }
@@ -118,7 +119,7 @@ export default function NovoPDIPage() {
 
   const handleCreateAnother = () => {
     setCreatedPdi(null);
-    setError("");
+    setSubmitError("");
   };
 
   if (createdPdi) {
@@ -227,7 +228,7 @@ export default function NovoPDIPage() {
           </p>
         </div>
 
-        {error && <ErrorMessage title="Erro de Validação/Servidor" message={error} />}
+        {submitError && <ErrorMessage title="Erro de Validação/Servidor" message={submitError} />}
 
         <PDIForm
           colaboradores={colaboradores}
