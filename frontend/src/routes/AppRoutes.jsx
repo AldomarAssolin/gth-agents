@@ -20,6 +20,8 @@ import EditarPDIPage from "../pages/EditarPDIPage";
 import PDIDetalhePage from "../pages/PDIDetalhePage";
 import PDIsColaboradorPage from "../pages/PDIsColaboradorPage";
 import FeedbacksPage from "../pages/FeedbacksPage";
+import NovoFeedbackPage from "../pages/NovoFeedbackPage";
+import FeedbacksColaboradorPage from "../pages/FeedbacksColaboradorPage";
 import ReconhecimentosPage from "../pages/ReconhecimentosPage";
 import NovoReconhecimentoPage from "../pages/NovoReconhecimentoPage";
 import ReconhecimentosColaboradorPage from "../pages/ReconhecimentosColaboradorPage";
@@ -54,6 +56,8 @@ export default function AppRoutes() {
           <Route path="/pdis/:id/editar" element={<EditarPDIPage />} />
           <Route path="/colaboradores/:id/pdis" element={<PDIsColaboradorPage />} />
           <Route path="/feedbacks" element={<FeedbacksPage />} />
+          <Route path="/feedbacks/novo" element={<NovoFeedbackPage />} />
+          <Route path="/colaboradores/:id/feedbacks" element={<FeedbacksColaboradorPage />} />
           <Route path="/reconhecimentos" element={<ReconhecimentosPage />} />
           <Route path="/reconhecimentos/novo" element={<NovoReconhecimentoPage />} />
           <Route path="/colaboradores/:id/reconhecimentos" element={<ReconhecimentosColaboradorPage />} />
