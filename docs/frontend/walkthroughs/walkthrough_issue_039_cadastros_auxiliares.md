@@ -77,6 +77,7 @@ Todas as interfaces implementam estados de `loading`, `erro` (exibição de `loa
 > - A proteção visual no frontend não substitui segurança no backend.
 > - A correção da camada backend para esses endpoints administrativos foi catalogada como melhoria futura.
 > - O backend não foi alterado nesta issue, seguindo a diretriz de manter a Issue #039 restrita ao frontend.
+> - Durante a validação manual, foi confirmado que a criação de setor retornou erro de permissão em cenário controlado com token sem privilégio administrativo, enquanto operações de edição e ativação/desativação permaneceram executáveis. Esse comportamento reforça o risco técnico já documentado de proteção backend incompleta em endpoints administrativos.
 
 ---
 
@@ -95,7 +96,24 @@ Todas as interfaces implementam estados de `loading`, `erro` (exibição de `loa
 
 ### 5.2 Validação Funcional (Manual Verification)
 
-* **Status**: **Pendente** (os cenários do roteiro de validação manual descritos em `docs/scratchpads/issue-039-cadastros-auxiliares-manual-validation.md` ainda precisam ser executados no ambiente de testes).
+* **Status**: **APROVADA**
+
+Os cenários funcionais descritos em `docs/scratchpads/issue-039-cadastros-auxiliares-manual-validation.md` foram executados no ambiente de testes e aprovados.
+
+Foram validados:
+
+- acesso ao módulo com perfil autorizado;
+- bloqueio visual para perfis não autorizados;
+- listagem de setores, funções, usuários e competências;
+- criação de registros;
+- edição de registros;
+- ativação e desativação;
+- tratamento de erro HTTP 403 real da API;
+- preservação da interface em erro de submissão;
+- preservação dos campos não sensíveis;
+- limpeza do campo de senha em falha de envio;
+- ausência de tela branca ou travamento;
+- manutenção da lista visível durante criação e edição.
 
 ---
 
