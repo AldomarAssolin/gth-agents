@@ -150,7 +150,7 @@ export default function CompetenciasPage() {
             {editingCompetencia ? `Editar Competência: ${editingCompetencia.nome}` : "Cadastrar Nova Competência"}
           </h3>
           <CompetenciaForm
-            key={editingCompetencia?.id || "new"}
+            key={editingCompetencia?.id ? `competencia-${editingCompetencia.id}` : "competencia-new"}
             onSubmit={handleCreateOrUpdate}
             onCancel={handleCancelForm}
             initialData={editingCompetencia}

@@ -60,7 +60,12 @@ Todas as interfaces implementam estados de `loading`, `erro` (exibição de `loa
    - O campo `senha` nunca é exposto na listagem, logs do console ou documentações.
    - Em caso de falha de envio por erros de validação (ex: 400 ou 409) no formulário, a senha é apagada do input imediatamente por segurança, mas os campos não sensíveis são preservados.
    - Na edição, o atributo `senha` é omitido do payload do `PUT` caso o usuário envie o formulário com a senha vazia, impedindo a sobreposição de valores de credenciais válidas.
-3. **Padrão React Keys para Reset de State**: A fim de respeitar as regras do lint do ESLint e evitar o uso de hooks `useEffect` para sincronização manual de estado interno com base nas props `initialData`, implementou-se a remountagem reativa de formulários com base na propriedade `key={editingItem?.id || "new"}` nos componentes pai, garantindo inicialização imediata e simplificada dos dados.
+3. **Padrão React Keys para Reset de State (Bug P2 - Remontagem por Key)**: A fim de respeitar as regras do lint do ESLint e evitar o uso de hooks `useEffect` para sincronização manual de estado interno com base nas props `initialData`, implementou-se a remountagem reativa de formulários nos componentes pai. Para evitar a reutilização de instâncias antigas do formulário ao clicar em "Editar" de itens distintos em sequência, o que manteria dados desatualizados no estado interno, os formulários são identificados unicamente pelas chaves:
+   - `key={editingSetor?.id ? `setor-${editingSetor.id}` : "setor-new"}`
+   - `key={editingFuncao?.id ? `funcao-${editingFuncao.id}` : "funcao-new"}`
+   - `key={editingUsuario?.id ? `usuario-${editingUsuario.id}` : "usuario-new"}`
+   - `key={editingCompetencia?.id ? `competencia-${editingCompetencia.id}` : "competencia-new"}`
+   Isso força o React a recriar o formulário do zero com os valores corretos sempre que o item selecionado para edição for alterado.
 
 ---
 

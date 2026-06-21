@@ -149,7 +149,7 @@ export default function FuncoesPage() {
             {editingFuncao ? `Editar Função: ${editingFuncao.nome}` : "Cadastrar Nova Função"}
           </h3>
           <FuncaoForm
-            key={editingFuncao?.id || "new"}
+            key={editingFuncao?.id ? `funcao-${editingFuncao.id}` : "funcao-new"}
             onSubmit={handleCreateOrUpdate}
             onCancel={handleCancelForm}
             initialData={editingFuncao}

@@ -150,7 +150,7 @@ export default function UsuariosPage() {
             {editingUsuario ? `Editar Usuário: ${editingUsuario.nome}` : "Cadastrar Novo Usuário"}
           </h3>
           <UsuarioForm
-            key={editingUsuario?.id || "new"}
+            key={editingUsuario?.id ? `usuario-${editingUsuario.id}` : "usuario-new"}
             onSubmit={handleCreateOrUpdate}
             onCancel={handleCancelForm}
             initialData={editingUsuario}

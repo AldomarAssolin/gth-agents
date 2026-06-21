@@ -149,6 +149,7 @@ export default function SetoresPage() {
             {editingSetor ? `Editar Setor: ${editingSetor.nome}` : "Cadastrar Novo Setor"}
           </h3>
           <SetorForm
+            key={editingSetor?.id ? `setor-${editingSetor.id}` : "setor-new"}
             onSubmit={handleCreateOrUpdate}
             onCancel={handleCancelForm}
             initialData={editingSetor}
