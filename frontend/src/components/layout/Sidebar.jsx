@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../features/auth/useAuth";
 
 export default function Sidebar() {
+  const { user } = useAuth();
+
   const menuItems = [
     {
       name: "Dashboard",
@@ -77,6 +80,13 @@ export default function Sidebar() {
     }
   ];
 
+  const filteredMenuItems = menuItems.filter((item) => {
+    if (item.path === "/configuracoes") {
+      return ["ADMIN", "RH"].includes(user?.perfil);
+    }
+    return true;
+  });
+
   return (
     <aside className="w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0">
       {/* Brand Header */}
@@ -91,7 +101,7 @@ export default function Sidebar() {
 
       {/* Nav Menu */}
       <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1.5">
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <NavLink
             key={item.name}
             to={item.path}

@@ -26,6 +26,10 @@ import ReconhecimentosPage from "../pages/ReconhecimentosPage";
 import NovoReconhecimentoPage from "../pages/NovoReconhecimentoPage";
 import ReconhecimentosColaboradorPage from "../pages/ReconhecimentosColaboradorPage";
 import ConfiguracoesPage from "../pages/ConfiguracoesPage";
+import SetoresPage from "../pages/SetoresPage";
+import FuncoesPage from "../pages/FuncoesPage";
+import UsuariosPage from "../pages/UsuariosPage";
+import CompetenciasPage from "../pages/CompetenciasPage";
 
 import PrivateRoute from "../features/auth/PrivateRoute";
 
@@ -62,6 +66,10 @@ export default function AppRoutes() {
           <Route path="/reconhecimentos/novo" element={<NovoReconhecimentoPage />} />
           <Route path="/colaboradores/:id/reconhecimentos" element={<ReconhecimentosColaboradorPage />} />
           <Route path="/configuracoes" element={<ConfiguracoesPage />} />
+          <Route path="/configuracoes/setores" element={<SetoresPage />} />
+          <Route path="/configuracoes/funcoes" element={<FuncoesPage />} />
+          <Route path="/configuracoes/usuarios" element={<UsuariosPage />} />
+          <Route path="/configuracoes/competencias" element={<CompetenciasPage />} />
         </Route>
       </Route>
 
