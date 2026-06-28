@@ -175,7 +175,7 @@ export default function SetoresPage() {
         />
       ) : (
         <Card className="border border-slate-700">
-          <Table headers={["ID", "Nome do Setor", "Descrição", "Status", "Ações"]}>
+          <Table headers={["ID", "Nome do Setor", "Descrição", "Status", "Ações"]} className="[&_table]:min-w-[700px]">
             {setores.map((setor) => (
               <tr key={setor.id} className="hover:bg-slate-750 transition-colors">
                 <td className="px-6 py-4 text-sm font-semibold text-slate-400">

@@ -175,7 +175,7 @@ export default function FuncoesPage() {
         />
       ) : (
         <Card className="border border-slate-700">
-          <Table headers={["ID", "Nome da Função", "Descrição", "Status", "Ações"]}>
+          <Table headers={["ID", "Nome da Função", "Descrição", "Status", "Ações"]} className="[&_table]:min-w-[700px]">
             {funcoes.map((funcao) => (
               <tr key={funcao.id} className="hover:bg-slate-750 transition-colors">
                 <td className="px-6 py-4 text-sm font-semibold text-slate-400">
