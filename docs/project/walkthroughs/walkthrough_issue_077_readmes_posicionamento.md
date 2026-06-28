@@ -16,8 +16,8 @@ As alterações concentraram-se exclusivamente na documentação conceitual e t�
 ### Arquivos Alterados
 
 * **[README.md](../../README.md)**: Atualizado com a visão geral do GTH Agents, proposta de valor, pilares organizacionais, módulos implementados, roadmap do produto, estrutura do monorepo e instruções de execução com Docker.
-* **[backend/README.md](../../backend/README.md)**: Reorganizado com foco técnico na API Flask, incluindo Clean Architecture, camadas do backend, módulos implementados, autenticação JWT, controle de acesso por perfil, controle de escopo, banco de dados, migrations, testes e comandos principais.
-* **[frontend/README.md](../../frontend/README.md)**: Reorganizado com foco técnico na aplicação React/Vite, incluindo stack, estrutura por features, rotas, autenticação, integração com API, interceptadores Axios, tratamento de erros, componentes reutilizáveis, execução local, Docker e build de produção.
+* **[backend/README.md](../../../backend/README.md)**: Reorganizado com foco técnico na API Flask, incluindo Clean Architecture, camadas do backend, módulos implementados, autenticação JWT, controle de acesso por perfil, controle de escopo, banco de dados, migrations, testes e comandos principais.
+* **[frontend/README.md](../../../frontend/README.md)**: Reorganizado com foco técnico na aplicação React/Vite, incluindo stack, estrutura por features, rotas, autenticação, integração com API, interceptadores Axios, tratamento de erros, componentes reutilizáveis, execução local, Docker e build de produção.
 
 ---
 
