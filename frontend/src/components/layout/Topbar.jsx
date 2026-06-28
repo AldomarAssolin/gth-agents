@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../features/auth/useAuth";
 
-export default function Topbar({ isSidebarOpen, onToggleSidebar }) {
+export default function Topbar({ isSidebarOpen, onToggleSidebar, menuButtonRef }) {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
@@ -24,6 +24,7 @@ export default function Topbar({ isSidebarOpen, onToggleSidebar }) {
       <div className="flex items-center space-x-3">
         {/* Toggle Sidebar Button for Mobile */}
         <button
+          ref={menuButtonRef}
           onClick={onToggleSidebar}
           className="lg:hidden p-2 -ml-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
           aria-label="Abrir menu"

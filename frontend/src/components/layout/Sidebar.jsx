@@ -1,8 +1,41 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../features/auth/useAuth";
 
 export default function Sidebar({ isOpen, onClose }) {
   const { user } = useAuth();
+
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(max-width: 1023px)").matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const handleChange = (e) => {
+      setIsMobile(e.matches);
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  const isMobileDrawerClosed = isMobile && !isOpen;
 
   const menuItems = [
     {
@@ -89,9 +122,10 @@ export default function Sidebar({ isOpen, onClose }) {
 
   return (
     <aside
-      className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+      className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex ${
         isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
+      inert={isMobileDrawerClosed ? "" : undefined}
     >
       {/* Brand Header */}
       <div className="p-6 border-b border-slate-700 flex items-center justify-between">

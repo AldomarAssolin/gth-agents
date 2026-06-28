@@ -14,12 +14,15 @@ O objetivo principal foi adaptar a navegação e a exibição de dados para que 
     *   Adicionou um backdrop escuro com efeito de desfoque (`backdrop-blur-sm`) que cobre a tela quando a gaveta de navegação é aberta.
     *   Tornou o padding da área principal de conteúdo dinâmico (`p-4 md:p-8`) para maximizar a área útil do conteúdo em dispositivos pequenos.
     *   **Ajuste de Tela Cheia:** Removeu a classe `max-w-7xl` e o alinhamento central `mx-auto` do contêiner `<main>` para permitir que o conteúdo principal (como o Dashboard, PDI e Reconhecimentos) ocupe toda a largura disponível em monitores grandes, eliminando o comportamento "encaixotado".
+    *   **Gerenciamento de Foco:** Criou a função `closeSidebar` que fecha a sidebar e move o foco por teclado de volta para o botão hambúrguer da `Topbar` de forma assíncrona usando `requestAnimationFrame`.
 *   **Sidebar (`frontend/src/components/layout/Sidebar.jsx`):**
     *   Modificou o elemento para ser exibido como um Drawer fixo e deslizante em telas menores que `lg` (1024px) com transições suaves (`transition-transform duration-300`).
     *   Adicionou o botão Close (X) no topo da barra lateral no mobile, com suporte à acessibilidade (`aria-label="Fechar menu"`).
-    *   Implementou o fechamento automático do menu de gaveta ao clicar em links de navegação.. (`onClick={onClose}`).
+    *   Implementou o fechamento automático do menu de gaveta ao clicar em links de navegação (`onClick={onClose}`).
+    *   **Correção de Acessibilidade (Aviso do DevTools):** Removeu o atributo `aria-hidden` na raiz da Sidebar para evitar o bloqueio de acessibilidade (`Blocked aria-hidden...`) quando os elementos internos recebem foco. Em seu lugar, aplicou o atributo `inert={isMobileDrawerClosed ? "" : undefined}` apenas quando a viewport está abaixo de `lg` e o drawer está fechado, ocultando completamente a barra invisível do tab order e das tecnologias assistivas sem prejudicar a sidebar desktop visível.
 *   **Topbar (`frontend/src/components/layout/Topbar.jsx`):**
     *   Adicionou o botão de menu hambúrguer no lado esquerdo do header, com suporte à acessibilidade (`aria-label="Abrir menu"` e `aria-expanded={isSidebarOpen}`), visível apenas em telas menores (`lg:hidden`).
+    *   Recebe a referência `menuButtonRef` e a associa ao botão hambúrguer para permitir o retorno do foco do teclado ao fechar o Drawer.
     *   Ajustou os paddings e os textos para se adaptarem e não estourarem em viewports estreitas de 375px/390px (por exemplo, ocultando o texto "Sair" em telas menores que `sm` e reduzindo o tamanho das iniciais e nome do usuário).
 
 ### Componentes Comuns de UI
@@ -43,6 +46,7 @@ O objetivo principal foi adaptar a navegação e a exibição de dados para que 
 2.  **Backdrop Interativo:** Clicar fora do Drawer (no backdrop) dispara o evento `onClose`, melhorando a experiência de navegação ao cancelar a visualização de forma natural.
 3.  **Tabelas Roláveis:** Em vez de forçar o espremimento de colunas cruciais em tabelas de dados, foi adotado o padrão de rolagem horizontal focada, garantindo legibilidade completa dos registros e das ações.
 4.  **Aproveitamento de Tela Cheia em Desktop:** A remoção de limites artificiais de largura (`max-w-7xl`) permitiu que grades complexas como a do Dashboard e do Mural de Reconhecimentos expandissem naturalmente nas telas desktop, utilizando de forma ótima o espaço sem introduzir barras de rolagem vertical desnecessárias no layout principal.
+5.  **Acessibilidade e Foco do Drawer Mobile:** A sidebar fechada no mobile é completamente removida da ordem de tabulação (`tabindex`) e de tecnologias assistivas através do atributo `inert` quando a tela está abaixo de `lg` e o drawer está fechado. Quando o drawer é fechado (seja pelo botão X, pelo clique no backdrop ou pelo clique em um link), o foco do teclado é devolvido para o botão hambúrguer da Topbar via `requestAnimationFrame` de forma assíncrona, eliminando erros de foco retido. No desktop (`lg+`), a Sidebar continua visível, acessível e navegável por teclado normalmente.
 
 ---
 
