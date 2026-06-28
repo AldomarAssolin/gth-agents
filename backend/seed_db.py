@@ -20,7 +20,12 @@ from infrastructure.database.models.funcao_model import FuncaoModel
 from infrastructure.database.models.meta_model import MetaModel
 from infrastructure.database.models.feedback_model import FeedbackModel
 from infrastructure.database.models.pdi_model import PDIModel
+from infrastructure.database.models.acao_pdi_model import AcaoPDIModel
 from infrastructure.database.models.reconhecimento_model import ReconhecimentoModel
+from infrastructure.database.models.avaliacao_model import AvaliacaoModel
+from infrastructure.database.models.item_avaliacao_model import ItemAvaliacaoModel
+from infrastructure.database.models.competencia_model import CompetenciaModel
+from infrastructure.database.models.perfil_talento_model import PerfilTalentoModel
 
 from werkzeug.security import generate_password_hash
 
@@ -30,9 +35,14 @@ def seed():
         print("Cleaning old seed data...")
         # Delete existing data in proper dependency order
         db.session.query(ReconhecimentoModel).delete()
+        db.session.query(AcaoPDIModel).delete()
         db.session.query(PDIModel).delete()
         db.session.query(FeedbackModel).delete()
         db.session.query(MetaModel).delete()
+        db.session.query(ItemAvaliacaoModel).delete()
+        db.session.query(AvaliacaoModel).delete()
+        db.session.query(CompetenciaModel).delete()
+        db.session.query(PerfilTalentoModel).delete()
         db.session.query(UsuarioModel).delete()
         db.session.query(ColaboradorModel).delete()
         db.session.query(FuncaoModel).delete()
