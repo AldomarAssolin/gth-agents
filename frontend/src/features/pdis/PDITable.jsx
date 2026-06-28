@@ -10,7 +10,7 @@ export default function PDITable({ pdis = [], colaboradoresMap = new Map(), show
     : ["PDI", "Origem", "Início", "Fim", "Status", "Ações (Concluídas/Total)", "Ações"];
 
   return (
-    <Table headers={headers}>
+    <Table headers={headers} className="[&_table]:min-w-[800px]">
       {pdis.map((pdi) => {
         const totalAcoes = Array.isArray(pdi.acoes) ? pdi.acoes.length : 0;
         const acoesConcluidas = Array.isArray(pdi.acoes)

@@ -7,7 +7,7 @@ export default function MetasTable({ metas = [] }) {
   const headers = ["Meta", "Prazo", "Prioridade", "Status", "Origem"];
 
   return (
-    <Table headers={headers}>
+    <Table headers={headers} className="[&_table]:min-w-[700px]">
       {metas.map((meta) => (
         <tr key={meta.id} className="hover:bg-slate-700/30 transition-colors">
           <td className="px-6 py-4">

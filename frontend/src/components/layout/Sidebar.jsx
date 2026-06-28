@@ -1,8 +1,41 @@
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../features/auth/useAuth";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const { user } = useAuth();
+
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.matchMedia("(max-width: 1023px)").matches;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const handleChange = (e) => {
+      setIsMobile(e.matches);
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      mediaQuery.addListener(handleChange);
+    }
+
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleChange);
+      } else {
+        mediaQuery.removeListener(handleChange);
+      }
+    };
+  }, []);
+
+  const isMobileDrawerClosed = isMobile && !isOpen;
 
   const menuItems = [
     {
@@ -88,15 +121,33 @@ export default function Sidebar() {
   });
 
   return (
-    <aside className="w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0">
+    <aside
+      className={`fixed inset-y-0 left-0 z-50 w-64 bg-slate-800 border-r border-slate-700 flex flex-col h-screen shrink-0 transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 lg:flex ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      inert={isMobileDrawerClosed ? "" : undefined}
+    >
       {/* Brand Header */}
-      <div className="p-6 border-b border-slate-700 flex items-center space-x-3">
-        <div className="bg-indigo-600 p-2 rounded-lg text-white shadow-md">
-          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
+      <div className="p-6 border-b border-slate-700 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="bg-indigo-600 p-2 rounded-lg text-white shadow-md">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <span className="text-xl font-bold tracking-tight text-white">GTH Agents</span>
         </div>
-        <span className="text-xl font-bold tracking-tight text-white">GTH Agents</span>
+
+        {/* Close button for mobile */}
+        <button
+          onClick={onClose}
+          className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          aria-label="Fechar menu"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Nav Menu */}
@@ -105,6 +156,7 @@ export default function Sidebar() {
           <NavLink
             key={item.name}
             to={item.path}
+            onClick={onClose}
             className={({ isActive }) =>
               `flex items-center space-x-3 px-4 py-3 rounded-lg text-sm font-semibold transition-all ${
                 isActive

@@ -176,7 +176,7 @@ export default function CompetenciasPage() {
         />
       ) : (
         <Card className="border border-slate-700">
-          <Table headers={["ID", "Nome da Competência", "Tipo", "Descrição", "Peso", "Status", "Ações"]}>
+          <Table headers={["ID", "Nome da Competência", "Tipo", "Descrição", "Peso", "Status", "Ações"]} className="[&_table]:min-w-[850px]">
             {competencias.map((comp) => (
               <tr key={comp.id} className="hover:bg-slate-750 transition-colors">
                 <td className="px-6 py-4 text-sm font-semibold text-slate-400">
