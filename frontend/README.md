@@ -1,168 +1,460 @@
-# GTH Agents - Frontend MVP
+# GTH Agents - Frontend Web
 
-Interface web interativa de controle e acompanhamento de talentos (Gestão de Talentos Humanos) desenvolvida para o monorepo **GTH Agents**.
+Interface web responsiva desenvolvida em React para o painel de gestão e acompanhamento de talentos do monorepo **GTH Agents**.
 
----
+A aplicação permite que líderes, profissionais de RH, administradores e colaboradores acompanhem informações relacionadas a competências, avaliações, metas, PDIs, feedbacks, reconhecimentos e evolução do colaborador de forma centralizada.
 
-## Stack Utilizada
-
-* **Core**: React 18 / Vite 8
-* **Styling**: TailwindCSS 3 (Vanilla CSS + PostCSS para componentes personalizados)
-* **Roteamento**: React Router v6
-* **Comunicação**: Axios para chamadas REST API
-* **Segurança**: Autenticação JWT (armazenamento persistido em LocalStorage com gerenciamento de estado via contexto React)
-* **Build/Bundler**: Vite + Rolldown
+O frontend consome a API REST do backend Flask, utiliza autenticação via JWT e organiza suas funcionalidades em módulos de negócio.
 
 ---
 
-## Pré-requisitos
+## Stack de Tecnologias
 
-* **Node.js**: v24+ (e gerenciador de pacotes npm)
-* **Docker** e **Docker Compose** (opcional, para execução isolada e em container)
+* **Biblioteca Core**: React
+* **Ferramental de Build**: Vite
+* **Roteamento**: React Router / React Router DOM
+* **Estilização**: Tailwind CSS
+* **Cliente HTTP**: Axios
+* **Controle de Sessão**: JWT persistido em `localStorage`
+* **Ambiente de Desenvolvimento**: Docker e Docker Compose
+
+> As versões exatas das dependências devem ser conferidas no arquivo `package.json`.
 
 ---
 
-## Como Rodar Localmente
+## Estrutura de Pastas e Componentes
 
-### 1. Instalar as dependências
-Navegue até a pasta `frontend` e instale os pacotes necessários:
-```bash
-npm install
+A aplicação utiliza uma estrutura organizada por **features**, separando módulos de negócio, páginas, componentes reutilizáveis e serviços de integração com a API.
+
+```python
+frontend/
+├── src/
+│   ├── assets/       # Recursos estáticos e estilos globais
+│   ├── components/   # Componentes compartilhados sem regra de negócio
+│   │   ├── layout/   # Sidebar, Topbar, PageHeader e elementos estruturais
+│   │   └── ui/       # Button, Card, Badge, Input, Table, EmptyState, Loading etc.
+│   ├── features/     # Módulos de negócio com services, componentes e formulários
+│   │   ├── auth/            # Autenticação, sessão e rotas protegidas
+│   │   ├── colaboradores/   # Listagem, cadastro, detalhe e dados do colaborador
+│   │   ├── avaliacoes/      # Registro de avaliações e exibição de resultados
+│   │   ├── metas/           # Criação, listagem e acompanhamento de metas
+│   │   ├── pdis/            # Planos de desenvolvimento e ações de PDI
+│   │   ├── feedbacks/       # Registro e consulta de feedbacks
+│   │   ├── reconhecimentos/ # Mural interno e registro de reconhecimentos
+│   │   ├── dashboard/       # Indicadores consolidados do MVP
+│   │   ├── evolucao/        # Evolução consolidada do colaborador
+│   │   └── configuracoes/   # Cadastros auxiliares administrativos
+│   ├── layouts/      # AppLayout e AuthLayout
+│   ├── pages/        # Telas completas mapeadas nas rotas
+│   ├── routes/       # Definição das rotas públicas e privadas
+│   ├── services/     # Instância central do Axios e configuração da API
+│   └── utils/        # Funções auxiliares e formatadores
 ```
 
-### 2. Configurar variáveis de ambiente
-Crie um arquivo `.env` baseado no modelo de exemplo:
+---
+
+## Organização por Features
+
+Cada módulo de negócio concentra seus próprios componentes, serviços, formatadores e tratamento de erros quando necessário.
+
+Exemplos:
+
+```text
+features/
+├── auth/
+├── dashboard/
+├── colaboradores/
+├── avaliacoes/
+├── metas/
+├── pdis/
+├── feedbacks/
+├── reconhecimentos/
+├── evolucao/
+└── configuracoes/
+```
+
+Essa organização evita que a aplicação concentre lógica de diferentes módulos em páginas gigantes ou arquivos genéricos demais. O frontend agradece. O próximo humano que fizer manutenção também.
+
+---
+
+## Integração com a API Backend
+
+A comunicação com o backend é centralizada em:
+
+```text
+src/services/api.js
+```
+
+Essa instância do Axios é responsável por:
+
+* definir a URL base da API;
+* enviar o token JWT nas requisições autenticadas;
+* tratar respostas de erro globais, como `401 Unauthorized`;
+* manter um ponto único de configuração para chamadas HTTP.
+
+A URL da API é configurada pela variável:
+
+```text
+VITE_API_URL
+```
+
+Exemplo:
+
+```http
+VITE_API_URL=http://localhost:5000
+```
+
+---
+
+## Principais Endpoints Consumidos
+
+A aplicação consome endpoints da API Flask conforme os módulos implementados.
+
+### Autenticação
+
+* `POST /auth/login`
+
+### Dashboard
+
+* `GET /dashboard/mvp`
+
+### Colaboradores
+
+* `GET /colaboradores`
+* `POST /colaboradores`
+* `GET /colaboradores/<int:id>`
+* `PUT /colaboradores/<int:id>`
+* `GET /colaboradores/<int:id>/evolucao`
+* `GET /colaboradores/<int:id>/metas`
+
+### Avaliações
+
+* `POST /avaliacoes`
+
+### Metas
+
+* `POST /metas`
+* `GET /metas`, quando disponível no backend
+* `GET /colaboradores/<int:id>/metas`
+
+### PDIs
+
+* `POST /pdis`
+* `GET /pdis`
+* `GET /pdis/<int:pdi_id>`
+* `PATCH /pdis/<int:pdi_id>`, quando disponível
+* `PATCH /pdis/<int:pdi_id>/concluir`, quando disponível
+* `PATCH /pdis/<int:pdi_id>/cancelar`, quando disponível
+* `GET /colaboradores/<int:colaborador_id>/pdis`
+* `POST /pdis/<int:pdi_id>/acoes`
+* `GET /pdis/<int:pdi_id>/acoes`, quando disponível como rota separada
+* `PATCH /pdis/<int:pdi_id>/acoes/<int:acao_id>`, quando disponível
+* `PATCH /pdis/<int:pdi_id>/acoes/<int:acao_id>/concluir`, quando disponível
+* `PATCH /pdis/<int:pdi_id>/acoes/<int:acao_id>/cancelar`, quando disponível
+
+### Feedbacks
+
+* `POST /feedbacks`
+* `POST /feedbacks/estruturar`, quando disponível
+* `GET /feedbacks`, quando disponível
+* `GET /colaboradores/<int:id>/feedbacks`, quando disponível
+
+### Reconhecimentos
+
+* `POST /reconhecimentos`
+* `GET /reconhecimentos`
+* `GET /reconhecimentos/<int:reconhecimento_id>`
+* `GET /colaboradores/<int:colaborador_id>/reconhecimentos`
+* `PATCH /reconhecimentos/<int:reconhecimento_id>/cancelar`, quando disponível
+
+### Cadastros Administrativos
+
+* `/setores`
+* `/funcoes`
+* `/usuarios`
+* `/competencias`
+
+> A lista acima deve permanecer alinhada com os contratos reais do backend. Endpoints marcados como "quando disponível" devem ser confirmados nas rotas Flask antes de serem consumidos em novas integrações.
+
+---
+
+## Segurança e Controle de Acesso
+
+A aplicação utiliza autenticação via JWT e mantém a sessão do usuário no navegador.
+
+### AuthContext / useAuth
+
+O contexto de autenticação centraliza os dados da sessão do usuário, como:
+
+```sql
+id
+nome
+email
+perfil
+colaborador_id
+setor_id
+```
+
+Perfis técnicos utilizados:
+
+```text
+ADMIN
+RH
+LIDER
+COLABORADOR
+```
+
+### PrivateRoute
+
+As rotas internas da aplicação são protegidas por componentes de rota privada.
+
+Comportamento esperado:
+
+* usuário autenticado acessa as páginas internas;
+* usuário não autenticado é redirecionado para `/login`;
+* rotas administrativas podem aplicar bloqueio visual por perfil;
+* o backend continua sendo a autoridade final de autorização.
+
+### Axios Interceptor
+
+A instância global do Axios adiciona automaticamente o cabeçalho de autorização quando existe token salvo:
+
+```http
+Authorization: Bearer <token>
+```
+
+Também trata respostas `401 Unauthorized`, normalmente relacionadas a token ausente, inválido ou expirado.
+
+Respostas `403 Forbidden` devem ser tratadas como falta de permissão, sem encerrar obrigatoriamente a sessão do usuário.
+
+---
+
+## Rotas Principais
+
+Rotas principais da aplicação:
+
+```text
+/login
+/dashboard
+/colaboradores
+/colaboradores/novo
+/colaboradores/:id
+/colaboradores/:id/evolucao
+/avaliacoes
+/avaliacoes/nova
+/metas
+/metas/nova
+/pdis
+/pdis/novo
+/pdis/:id
+/colaboradores/:id/pdis
+/feedbacks
+/feedbacks/novo
+/reconhecimentos
+/reconhecimentos/novo
+/configuracoes
+```
+
+A disponibilidade visual de algumas rotas pode variar conforme o perfil do usuário autenticado.
+
+---
+
+## Padrões de Tela
+
+As telas do frontend seguem padrões reutilizáveis para:
+
+* carregamento (`Loading`);
+* erro (`ErrorMessage`);
+* estado vazio (`EmptyState`);
+* cartões (`Card`);
+* tabelas (`Table`);
+* badges de status;
+* formulários com validação básica;
+* mensagens amigáveis para falhas de conexão, dados ausentes e acesso negado.
+
+Sempre que possível, os módulos devem reutilizar componentes existentes em `src/components/ui/` e `src/components/layout/`.
+
+---
+
+## Tratamento de Erros
+
+O frontend trata erros em camadas:
+
+* **Erro de autenticação (`401`)**: tratado globalmente pela instância do Axios.
+* **Erro de permissão (`403`)**: exibido como acesso negado ou mensagem específica da página.
+* **Erro de recurso inexistente (`404`)**: exibido como mensagem amigável, preservando o layout.
+* **Erro de validação (`400`)**: exibido próximo ao formulário ou ao campo relacionado, quando possível.
+* **Erro de conexão**: exibido sem desmontar telas já carregadas, sempre que o estado da página permitir.
+
+Em formulários, erros de submissão devem preservar os dados já preenchidos para permitir correção e nova tentativa.
+
+---
+
+## Execução e Configuração
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` a partir do modelo base na pasta `frontend/`:
+
 ```bash
 cp .env.example .env
 ```
 
-### 3. Executar em modo desenvolvimento
-Inicie o servidor de desenvolvimento Vite local:
+Variável principal:
+
+```text
+VITE_API_URL=http://localhost:5000
+```
+
+Nunca versionar `.env` com dados sensíveis ou configurações locais reais.
+
+---
+
+## Execução Local
+
+A partir da pasta `frontend/`:
+
 ```bash
+npm install
 npm run dev
 ```
-O frontend estará acessível em: [http://localhost:5173](http://localhost:5173)
+
+A aplicação ficará disponível em:
+
+```text
+http://localhost:5173
+```
 
 ---
 
-## Como Rodar com Docker (Desenvolvimento Integrado)
+## Execução com Docker
 
-O desenvolvimento integrado do monorepo utiliza o `docker-compose.yml` localizado na raiz do projeto. Para subir o frontend integrado com a API Flask e o banco de dados PostgreSQL:
+A partir da raiz do monorepo:
 
 ```bash
-docker compose up --build
+docker compose up --build -d
 ```
-Após o processo de inicialização, os serviços estarão disponíveis em:
-* **Frontend Dev**: http://localhost:5173
-* **Backend API**: http://localhost:5000
+
+O frontend ficará disponível em:
+
+```text
+http://localhost:5173
+```
+
+Para acompanhar logs:
+
+```bash
+docker compose logs -f web
+```
+
+Para encerrar o ambiente:
+
+```bash
+docker compose down
+```
 
 ---
 
-## Geração do Build de Produção
+## Build de Produção
 
-Para testar o empacotador e validar a integridade estática dos bundles de produção localmente:
+A partir da pasta `frontend/`:
 
 ```bash
 npm run build
 ```
-O build estático compilado e otimizado será gerado na pasta `dist/`.
+
+Os arquivos otimizados serão gerados em:
+
+```text
+dist/
+```
 
 ---
 
-## Testar Imagem Docker de Produção (Standalone)
+## Build de Produção com Docker
 
-O frontend MVP possui suporte de produção via imagem Nginx standalone configurada para servir os arquivos estáticos e tratar fallbacks de roteamento SPA.
+Caso o projeto possua `Dockerfile.prod` e `nginx.conf`, a imagem de produção pode ser testada localmente com:
 
-### 1. Construir a imagem Docker de produção
-No diretório `frontend`, execute:
 ```bash
 docker build -f Dockerfile.prod -t gth-agents-web:prod .
-```
-
-### 2. Rodar o container standalone
-Execute o container mapeando a porta local 8080:
-```bash
 docker run --rm -p 8080:80 gth-agents-web:prod
 ```
 
-### 3. Acessar a aplicação em produção
-Abra no navegador: [http://localhost:8080](http://localhost:8080)
-
----
-
-## Variáveis de Ambiente
-
-As configurações dinâmicas do frontend são expostas ao Vite através das variáveis de ambiente prefixadas com `VITE_`.
-
-O arquivo `frontend/.env.example` documenta as variáveis necessárias:
-```env
-VITE_API_URL=http://localhost:5000
-```
-* **VITE_API_URL**: URL base da API Flask para as requisições HTTP do Axios.
-
----
-
-## Integração com o Backend
-
-A interface consome os seguintes endpoints do backend Flask (todas as requisições privadas exigem o cabeçalho `Authorization: Bearer <token_jwt>`):
-
-* `POST /login` - Autenticação de usuários.
-* `GET /dashboard/mvp` - Métricas consolidadas de talentos, metas e alertas.
-* `GET /colaboradores` - Listagem completa de colaboradores.
-* `GET /colaboradores/<id>` - Detalhes específicos de um colaborador.
-* `GET /colaboradores/<id>/evolucao` - Histórico integrado de feedbacks, reconhecimentos, metas e PDIs.
-* `POST /avaliacoes` - Registro de nova avaliação de colaborador.
-* `POST /metas` - Criação de novas metas.
-* `POST /pdis` - Criação de novos Planos de Desenvolvimento Individual.
-* `POST /pdis/<pdi_id>/acoes` - Adicionar ação de desenvolvimento ao PDI.
-* `POST /feedbacks` - Envio de novos feedbacks.
-* `POST /reconhecimentos` - Envio de novos reconhecimentos.
-
----
-
-## Estrutura de Pastas
+A aplicação ficará disponível em:
 
 ```text
-frontend/
-├── src/
-│   ├── assets/       # Imagens e estilos estáticos globais
-│   ├── components/   # Componentes reutilizáveis compartilhados (ex: Ui/Loading, Button, Input)
-│   ├── features/     # Módulos encapsulados de lógica por domínio (ex: auth, colaboradores, pdis)
-│   │   ├── auth/
-│   │   ├── colaboradores/
-│   │   └── pdis/
-│   ├── layouts/      # Layouts estruturais de página (ex: Sidebar, Topbar, MainLayout)
-│   ├── pages/        # Componentes de visualização principal associados às rotas
-│   ├── routes/       # Definição e proteção de rotas da aplicação
-│   ├── services/     # Clientes de comunicação Axios com a API backend
-│   └── utils/        # Funções utilitárias auxiliares de conversão e formatação
-├── Dockerfile.dev    # Dockerfile otimizado para o fluxo de desenvolvimento
-├── Dockerfile.prod   # Dockerfile multi-stage com Nginx para build de produção
-├── nginx.conf        # Configuração do Nginx com fallback de rotas React Router
-└── vite.config.js    # Configuração do compilador/empacotador Vite
+http://localhost:8080
 ```
 
 ---
 
-## Observações sobre Autenticação JWT
+## Suporte SPA no Nginx
 
-1. **Persistência**: O token recebido no login é salvo no `localStorage` sob a chave `token`.
-2. **Contexto**: O hook personalizado `useAuth` fornece o estado global de autenticação (`user`, `login`, `logout`).
-3. **Interceptador**: O cliente Axios (`services/api.js`) intercepta automaticamente cada requisição de saída para adicionar o token JWT ao cabeçalho `Authorization`.
-4. **Tratamento de 401**: Respostas HTTP de erro 401 limpam automaticamente os cookies/localStorage e forçam o redirecionamento ao login.
+Como o frontend é uma Single Page Application, o roteamento interno é resolvido pelo React Router no navegador.
 
----
+Em builds servidos por Nginx, rotas profundas como:
 
-## Observações sobre React Router e Nginx
+```text
+/colaboradores/1/evolucao
+```
 
-Em uma aplicação do tipo SPA (Single Page Application), o roteamento é feito no lado do cliente. Se um usuário atualiza a página em uma rota profunda (como `/colaboradores/1/evolucao`), o servidor da web comum tentará encontrar o arquivo físico e retornará erro `404 Not Found`.
+precisam retornar `index.html` para que o React Router resolva a tela correta.
 
-Para resolver isso em produção, a configuração `frontend/nginx.conf` inclui a diretiva `try_files`:
+Exemplo de configuração:
+
 ```nginx
 location / {
-    root /usr/share/nginx/html;
-    index index.html index.htm;
     try_files $uri $uri/ /index.html;
 }
 ```
-Isso redireciona todas as requisições que não correspondem a um arquivo estático físico de volta para o `index.html`, delegando a resolução da rota ao `React Router` do lado do cliente.
+
+Essa configuração deve existir em `nginx.conf` quando a imagem de produção usar Nginx.
+
+---
+
+## Validações Técnicas
+
+Comandos principais:
+
+```bash
+npm run lint
+npm run build
+```
+
+Quando a aplicação estiver integrada via Docker:
+
+```bash
+docker compose config
+docker compose up --build -d
+```
+
+---
+
+## Convenções Técnicas
+
+* Reutilizar a instância global do Axios em `src/services/api.js`.
+* Não criar clientes HTTP paralelos sem necessidade.
+* Reutilizar componentes comuns de `src/components/ui/`.
+* Manter regras de negócio de cada módulo dentro de `features/`.
+* Evitar duplicação de services.
+* Não consumir endpoints não confirmados no backend.
+* Preservar dados de formulário em falhas de submissão.
+* Tratar `403` como falta de permissão, não como sessão expirada.
+* Tratar `401` pelo fluxo global de autenticação.
+* Evitar dados simulados quando a API real estiver disponível.
+* Documentar limitações conhecidas nos walkthroughs das issues.
+
+---
+
+## Status Atual
+
+O frontend do GTH Agents encontra-se em fase de consolidação do MVP, com módulos principais de autenticação, dashboard, colaboradores, avaliações, metas, PDI, feedbacks, reconhecimentos, evolução e cadastros auxiliares implementados ou em revisão final.
+
+Próximas evoluções previstas:
+
+* consolidação final da release frontend MVP;
+* melhorias de responsividade;
+* refinamento de UX;
+* módulo de Saúde Organizacional;
+* dashboards analíticos;
+* People Analytics.
