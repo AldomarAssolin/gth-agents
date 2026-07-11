@@ -73,6 +73,40 @@ POSTGRES_PASSWORD=<senha-db>
 VITE_API_URL=https://api-demo.exemplo.com
 ```
 
+### Injeção das variáveis no container da API
+
+A criação do arquivo `backend/.env` não disponibiliza automaticamente suas
+variáveis ao container `api`.
+
+O serviço deve carregar explicitamente as configurações por meio de:
+
+- `env_file`; ou
+- entradas individuais em `environment`.
+
+Antes da preparação do ambiente demo, devem ser disponibilizadas ao
+container, no mínimo:
+
+- `SECRET_KEY`;
+- `DATABASE_URL`;
+- `JWT_SECRET_KEY`;
+- `JWT_ALGORITHM`;
+- `JWT_EXPIRES_MINUTES`;
+- `CORS_ORIGINS`.
+
+```yaml
+services:
+  api:
+    env_file:
+      - ./backend/.env.demo
+    environment:
+      FLASK_ENV: production
+```
+
+> backend/.env.demo não deve ser versionado
+
+O `docker-compose.yml` atual não deve ser considerado adequado para uma demo
+segura sem uma composição adicional ou override.
+
 > [!WARNING]
 > Nunca compartilhe ou versiona os arquivos `.env` preenchidos com credenciais reais. Utilize sempre este checklist como referência de placeholders genéricos.
 

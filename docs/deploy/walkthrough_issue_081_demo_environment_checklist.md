@@ -105,6 +105,15 @@ Esses comandos e procedimentos foram documentados apenas como modelos genéricos
 
 ---
 
+### Correção posterior à revisão
+
+Após o merge inicial da Issue #081, foi identificado que o checklist não
+explicava adequadamente a necessidade de injetar as variáveis do arquivo de
+ambiente no container `api`.
+
+A documentação foi corrigida em PR complementar. Nenhuma configuração
+operacional do Docker Compose foi alterada nesta correção.
+
 ## Resultado consolidado das validações
 
 ```text
