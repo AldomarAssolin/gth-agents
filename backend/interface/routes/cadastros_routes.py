@@ -39,7 +39,7 @@ from interface.schemas.cadastro_schema import (
     parse_atualizar_competencia,
 )
 from interface.schemas.serializers import serialize
-from interface.middlewares.auth_middleware import roles_required
+from interface.middlewares.auth_middleware import auth_required, roles_required
 
 
 
@@ -48,6 +48,7 @@ cadastros_interface_bp = Blueprint("interface_cadastros", __name__)
 
 # Setores
 @cadastros_interface_bp.get("/setores")
+@auth_required
 def listar_setores():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         setores = ListarSetoresUC(uow.setores).execute()
@@ -65,6 +66,7 @@ def criar_setor():
 
 
 @cadastros_interface_bp.get("/setores/<int:id>")
+@roles_required("ADMIN", "RH")
 def obter_setor(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         setor = BuscarSetorPorIdUC(uow.setores).execute(id)
@@ -72,6 +74,7 @@ def obter_setor(id):
 
 
 @cadastros_interface_bp.put("/setores/<int:id>")
+@roles_required("ADMIN", "RH")
 def atualizar_setor(id):
     dto = parse_atualizar_setor(id, request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -80,6 +83,7 @@ def atualizar_setor(id):
 
 
 @cadastros_interface_bp.patch("/setores/<int:id>/desativar")
+@roles_required("ADMIN", "RH")
 def desativar_setor(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         setor = DesativarSetorUC(uow.setores).execute(id)
@@ -87,6 +91,7 @@ def desativar_setor(id):
 
 
 @cadastros_interface_bp.patch("/setores/<int:id>/ativar")
+@roles_required("ADMIN", "RH")
 def ativar_setor(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         setor = AtivarSetorUC(uow.setores).execute(id)
@@ -95,6 +100,7 @@ def ativar_setor(id):
 
 # Funcoes
 @cadastros_interface_bp.get("/funcoes")
+@auth_required
 def listar_funcoes():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         funcoes = ListarFuncoesUC(uow.funcoes).execute()
@@ -111,6 +117,7 @@ def criar_funcao():
     return jsonify(serialize(funcao)), 201
 
 @cadastros_interface_bp.get("/funcoes/<int:id>")
+@roles_required("ADMIN", "RH")
 def obter_funcao(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         funcao = BuscarFuncaoPorIdUC(uow.funcoes).execute(id)
@@ -118,6 +125,7 @@ def obter_funcao(id):
 
 
 @cadastros_interface_bp.put("/funcoes/<int:id>")
+@roles_required("ADMIN", "RH")
 def atualizar_funcao(id):
     dto = parse_atualizar_funcao(id, request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -126,6 +134,7 @@ def atualizar_funcao(id):
 
 
 @cadastros_interface_bp.patch("/funcoes/<int:id>/desativar")
+@roles_required("ADMIN", "RH")
 def desativar_funcao(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         funcao = DesativarFuncaoUC(uow.funcoes).execute(id)
@@ -133,6 +142,7 @@ def desativar_funcao(id):
 
 
 @cadastros_interface_bp.patch("/funcoes/<int:id>/ativar")
+@roles_required("ADMIN", "RH")
 def ativar_funcao(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         funcao = AtivarFuncaoUC(uow.funcoes).execute(id)
@@ -141,6 +151,7 @@ def ativar_funcao(id):
 
 # Usuarios
 @cadastros_interface_bp.get("/usuarios")
+@roles_required("ADMIN", "RH")
 def listar_usuarios():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         usuarios = ListarUsuariosUC(uow.usuarios).execute()
@@ -157,6 +168,7 @@ def criar_usuario():
     return jsonify(serialize(usuario)), 201
 
 @cadastros_interface_bp.get("/usuarios/<int:id>")
+@roles_required("ADMIN", "RH")
 def obter_usuario(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         usuario = BuscarUsuarioPorIdUC(uow.usuarios).execute(id)
@@ -164,6 +176,7 @@ def obter_usuario(id):
 
 
 @cadastros_interface_bp.put("/usuarios/<int:id>")
+@roles_required("ADMIN", "RH")
 def atualizar_usuario(id):
     dto = parse_atualizar_usuario(id, request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -172,6 +185,7 @@ def atualizar_usuario(id):
 
 
 @cadastros_interface_bp.patch("/usuarios/<int:id>/desativar")
+@roles_required("ADMIN", "RH")
 def desativar_usuario(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         usuario = DesativarUsuarioUC(uow.usuarios).execute(id)
@@ -179,6 +193,7 @@ def desativar_usuario(id):
 
 
 @cadastros_interface_bp.patch("/usuarios/<int:id>/ativar")
+@roles_required("ADMIN", "RH")
 def ativar_usuario(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         usuario = AtivarUsuarioUC(uow.usuarios).execute(id)
@@ -187,6 +202,7 @@ def ativar_usuario(id):
 
 # Competencias
 @cadastros_interface_bp.get("/competencias")
+@auth_required
 def listar_competencias():
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencias = ListarCompetenciasUC(uow.competencias).execute()
@@ -203,6 +219,7 @@ def criar_competencia():
     return jsonify(serialize(competencia)), 201
 
 @cadastros_interface_bp.get("/competencias/<int:id>")
+@roles_required("ADMIN", "RH")
 def obter_competencia(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = BuscarCompetenciaPorIdUC(uow.competencias).execute(id)
@@ -210,6 +227,7 @@ def obter_competencia(id):
     
 
 @cadastros_interface_bp.put("/competencias/<int:id>")
+@roles_required("ADMIN", "RH")
 def atualizar_competencia(id):
     dto = parse_atualizar_competencia(id, request.get_json(silent=True) or {})
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
@@ -218,6 +236,7 @@ def atualizar_competencia(id):
 
 
 @cadastros_interface_bp.patch("/competencias/<int:id>/desativar")
+@roles_required("ADMIN", "RH")
 def desativar_competencia(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = DesativarCompetenciaUC(uow.competencias).execute(id)
@@ -225,6 +244,7 @@ def desativar_competencia(id):
 
 
 @cadastros_interface_bp.patch("/competencias/<int:id>/ativar")
+@roles_required("ADMIN", "RH")
 def ativar_competencia(id):
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         competencia = AtivarCompetenciaUC(uow.competencias).execute(id)
