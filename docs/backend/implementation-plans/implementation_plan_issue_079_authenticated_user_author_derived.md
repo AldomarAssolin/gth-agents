@@ -27,7 +27,7 @@ A fonte de autoria mapeada e validada no backend será o ID do usuário autentic
 A estratégia escolhida é a **Estratégia Transitória** aplicada de forma consistente em todos os módulos:
 - O backend continuará aceitando temporariamente os campos de autoria no payload das requisições para compatibilidade.
 - No entanto, os schemas e rotas receberão a autoria como argumento separado do payload e ignorarão completamente qualquer valor enviado no payload.
-  
+
 As chamadas de schema serão ajustadas da seguinte forma:
 ```python
 parse_registrar_avaliacao(data, avaliador_id=authenticated_user_id)
