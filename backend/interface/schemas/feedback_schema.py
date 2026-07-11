@@ -1,10 +1,10 @@
 from application.dtos.feedback_dto import RegistrarFeedbackDTO, EstruturarFeedbackDTO
 
 
-def parse_registrar_feedback(data: dict) -> RegistrarFeedbackDTO:
+def parse_registrar_feedback(data: dict, autor_id: int) -> RegistrarFeedbackDTO:
     return RegistrarFeedbackDTO(
         colaborador_id=data.get("colaborador_id"),
-        autor_id=data.get("autor_id"),
+        autor_id=autor_id,
         contexto=data.get("contexto"),
         ponto_positivo=data.get("ponto_positivo"),
         ponto_melhoria=data.get("ponto_melhoria"),

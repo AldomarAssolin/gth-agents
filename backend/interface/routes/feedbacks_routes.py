@@ -17,7 +17,7 @@ feedbacks_interface_bp = Blueprint("interface_feedbacks", __name__, url_prefix="
 @feedbacks_interface_bp.post("")
 @roles_required("ADMIN", "RH", "LIDER")
 def registrar_feedback():
-    dto = parse_registrar_feedback(request.get_json(silent=True) or {})
+    dto = parse_registrar_feedback(request.get_json(silent=True) or {}, autor_id=g.usuario["id"])
 
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         colaborador = uow.colaboradores.get_by_id(dto.colaborador_id)

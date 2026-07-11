@@ -16,7 +16,7 @@ avaliacoes_interface_bp = Blueprint("interface_avaliacoes", __name__, url_prefix
 @avaliacoes_interface_bp.post("")
 @roles_required("ADMIN", "RH", "LIDER")
 def registrar_avaliacao():
-    dto = parse_registrar_avaliacao(request.get_json(silent=True) or {})
+    dto = parse_registrar_avaliacao(request.get_json(silent=True) or {}, avaliador_id=g.usuario["id"])
 
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         colaborador = uow.colaboradores.get_by_id(dto.colaborador_id)
