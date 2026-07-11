@@ -16,7 +16,7 @@ metas_interface_bp = Blueprint("interface_metas", __name__, url_prefix="/metas")
 @metas_interface_bp.post("")
 @roles_required("ADMIN", "RH", "LIDER")
 def criar_meta():
-    dto = parse_criar_meta(request.get_json(silent=True) or {})
+    dto = parse_criar_meta(request.get_json(silent=True) or {}, criado_por_id=g.usuario["id"])
 
     with UnitOfWorkSQLAlchemy(SessionLocal) as uow:
         colaborador = uow.colaboradores.get_by_id(dto.colaborador_id)
