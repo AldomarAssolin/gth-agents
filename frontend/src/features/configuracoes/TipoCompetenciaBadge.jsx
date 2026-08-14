@@ -8,7 +8,7 @@ export default function TipoCompetenciaBadge({ tipo }) {
     ORGANIZACIONAL: { variant: "secondary", label: "Organizacional" },
   };
 
-  const item = mapping[tipo] || { variant: "info", label: tipo || "N/A" };
+  const item = mapping[tipo] || { variant: "secondary", label: tipo || "Não informado" };
 
   return <Badge variant={item.variant}>{item.label}</Badge>;
 }
