@@ -1,5 +1,5 @@
 import Card from "../../components/ui/Card";
-import Badge from "../../components/ui/Badge";
+import TipoCompetenciaBadge from "../configuracoes/TipoCompetenciaBadge";
 import { formatarDataBrasil, traduzirTipoAvaliacao } from "./evolucaoFormatters";
 
 export default function AvaliacoesDetalhes({ avaliacoes: avaliacoesProps }) {
@@ -50,7 +50,6 @@ export default function AvaliacoesDetalhes({ avaliacoes: avaliacoesProps }) {
                   <div className="space-y-4">
                     {av.itens.map((item) => {
                       const comp = item.competencia || {};
-                      const isTecnica = comp.tipo === "TECNICA";
 
                       return (
                         <div
@@ -62,9 +61,7 @@ export default function AvaliacoesDetalhes({ avaliacoes: avaliacoesProps }) {
                               <span className="text-sm font-semibold text-white truncate">
                                 {comp.nome || "Competência não identificada"}
                               </span>
-                              <Badge variant={isTecnica ? "info" : "success"}>
-                                {isTecnica ? "Técnica" : "Comportamental"}
-                              </Badge>
+                              <TipoCompetenciaBadge tipo={comp.tipo} />
                             </div>
                             {item.comentario && (
                               <p className="text-slate-400 text-xs mt-1 leading-relaxed italic">
