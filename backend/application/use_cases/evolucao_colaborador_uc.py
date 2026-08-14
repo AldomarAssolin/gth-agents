@@ -10,6 +10,7 @@ from application.ports.meta_repository import MetaRepository
 from application.ports.perfil_talento_repository import PerfilTalentoRepository
 from domain.enums.status_meta import StatusMeta
 from domain.enums.tipo_competencia import TipoCompetencia
+from domain.services.calculadora_competencias import CalculadoraCompetencias, ResultadoCompetencias
 from application.security.access_scope_service import AccessScopeService
 
 
@@ -114,21 +115,9 @@ class ConsultarEvolucaoColaboradorUC:
         # 6. Reconhecimentos
         reconhecimentos = self.uow.reconhecimentos.list_by_colaborador_id(colaborador_id)
 
-        # Calcular notas de competências (mesma lógica herdada do VisualizarEvolucaoColaboradorUC)
         competencias = {c.id: c for c in self.uow.competencias.list()}
-        notas_tecnicas = []
-        notas_comportamentais = []
-
-        for avaliacao in avaliacoes:
-            for item in avaliacao.itens:
-                comp = item.competencia or competencias.get(item.competencia_id)
-                if comp:
-                    tipo = comp.tipo.value if isinstance(comp.tipo, TipoCompetencia) else str(comp.tipo)
-                    tipo = tipo.upper()
-                    if tipo == "TECNICA":
-                        notas_tecnicas.append(item.nota)
-                    elif tipo in ("COMPORTAMENTAL", "LIDERANCA"):
-                        notas_comportamentais.append(item.nota)
+        ultima_avaliacao = self.uow.avaliacoes.get_ultima_by_colaborador(colaborador_id)
+        resultado_competencias = self._calcular_indicadores_competencias(ultima_avaliacao, competencias)
 
         # Pre-populate competencia nos itens de avaliacao
         for avaliacao in avaliacoes:
@@ -154,9 +143,12 @@ class ConsultarEvolucaoColaboradorUC:
                 "total_feedbacks": len(feedbacks),
                 "pdis_ativos": len([p for p in pdis if _get_val(p.status) == "ATIVO"]),
                 "reconhecimentos": len(reconhecimentos_ativos),
-                # Chaves legadas para compatibilidade
-                "media_tecnica": self._media(notas_tecnicas),
-                "media_comportamental": self._media(notas_comportamentais),
+                # Médias legadas preservadas e novas dimensões do estado atual.
+                "media_tecnica": resultado_competencias.media_tecnica,
+                "media_comportamental": resultado_competencias.media_comportamental,
+                "media_lideranca": resultado_competencias.media_lideranca,
+                "media_organizacional": resultado_competencias.media_organizacional,
+                "media_geral": resultado_competencias.media_geral,
                 "perfil_atual": perfil_atual,
             },
             "ultimas_avaliacoes": [
@@ -215,7 +207,13 @@ class ConsultarEvolucaoColaboradorUC:
             "avaliacoes": avaliacoes,
         }
 
-    def _media(self, notas: List[int]) -> float:
-        if not notas:
-            return 0.0
-        return round(sum(notas) / len(notas), 2)
+    def _calcular_indicadores_competencias(self, avaliacao, competencias) -> ResultadoCompetencias:
+        if not avaliacao or not avaliacao.itens:
+            return ResultadoCompetencias(
+                media_tecnica=0.0,
+                media_comportamental=0.0,
+                media_lideranca=0.0,
+                media_organizacional=0.0,
+                media_geral=0.0,
+            )
+        return CalculadoraCompetencias().calcular(avaliacao, competencias)
