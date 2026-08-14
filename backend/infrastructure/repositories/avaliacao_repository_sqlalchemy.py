@@ -27,3 +27,12 @@ class AvaliacaoRepositorySQLAlchemy(AvaliacaoRepository):
             .order_by(AvaliacaoModel.criado_em.asc())
         ).scalars().all()
         return [AvaliacaoMapper.to_domain(model) for model in models]
+
+    def get_ultima_by_colaborador(self, colaborador_id: int) -> Avaliacao | None:
+        model = self.session.execute(
+            select(AvaliacaoModel)
+            .filter_by(colaborador_id=colaborador_id)
+            .order_by(AvaliacaoModel.criado_em.desc(), AvaliacaoModel.id.desc())
+            .limit(1)
+        ).scalar_one_or_none()
+        return AvaliacaoMapper.to_domain(model)

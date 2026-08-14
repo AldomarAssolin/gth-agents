@@ -20,7 +20,8 @@ from infrastructure.database.models.feedback_model import FeedbackModel
 from infrastructure.database.models.pdi_model import PDIModel
 from infrastructure.database.models.reconhecimento_model import ReconhecimentoModel
 from infrastructure.database.models.perfil_talento_model import PerfilTalentoModel
-from infrastructure.database.models.avaliacao_model import AvaliacaoModel
+from infrastructure.database.models.avaliacao_model import AvaliacaoModel, ItemAvaliacaoModel
+from infrastructure.database.models.competencia_model import CompetenciaModel
 from werkzeug.security import generate_password_hash
 
 
@@ -384,6 +385,125 @@ def test_response_contem_chaves_principais_esperadas(client):
     assert "feedbacks" in data
     assert "pdis" in data
     assert "reconhecimentos" in data
+
+
+def test_indicadores_competencias_usam_avaliacao_mais_recente_com_media_ponderada(client):
+    ids = seed_data(client.application)
+    token = get_token(client, ids["admin_email"])
+
+    with client.application.app_context():
+        lider = db.session.query(UsuarioModel).filter_by(email=ids["lidera_email"]).one()
+
+        tecnica_a = CompetenciaModel(nome="Tecnica A", tipo="TECNICA", peso=2.0, ativo=True)
+        tecnica_b = CompetenciaModel(nome="Tecnica B", tipo="TECNICA", peso=1.0, ativo=True)
+        comportamental = CompetenciaModel(nome="Comportamental", tipo="COMPORTAMENTAL", peso=1.5, ativo=True)
+        lideranca = CompetenciaModel(nome="Lideranca", tipo="LIDERANCA", peso=3.0, ativo=True)
+        organizacional = CompetenciaModel(nome="Organizacional", tipo="ORGANIZACIONAL", peso=0.5, ativo=True)
+        db.session.add_all([tecnica_a, tecnica_b, comportamental, lideranca, organizacional])
+        db.session.flush()
+
+        avaliacao_antiga = AvaliacaoModel(
+            colaborador_id=ids["colab1_id"],
+            avaliador_id=lider.id,
+            tipo="AVALIACAO_LIDER",
+            observacao_geral="Avaliacao antiga",
+            data_avaliacao=datetime(2026, 7, 1, 10, 0),
+            criado_em=datetime(2026, 5, 20, 10, 0),
+            status="CONCLUIDA",
+        )
+        avaliacao_recente = AvaliacaoModel(
+            colaborador_id=ids["colab1_id"],
+            avaliador_id=lider.id,
+            tipo="AVALIACAO_LIDER",
+            observacao_geral="Avaliacao recente",
+            data_avaliacao=datetime(2026, 4, 1, 10, 0),
+            criado_em=datetime(2026, 6, 1, 10, 0),
+            status="CONCLUIDA",
+        )
+        db.session.add_all([avaliacao_antiga, avaliacao_recente])
+        db.session.flush()
+
+        db.session.add_all([
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_antiga.id, competencia_id=tecnica_a.id, nota=1),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_antiga.id, competencia_id=comportamental.id, nota=1),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_recente.id, competencia_id=tecnica_a.id, nota=5),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_recente.id, competencia_id=tecnica_b.id, nota=1),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_recente.id, competencia_id=comportamental.id, nota=4),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_recente.id, competencia_id=lideranca.id, nota=2),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_recente.id, competencia_id=organizacional.id, nota=5),
+        ])
+        db.session.commit()
+
+    res = api_get(client, f"/colaboradores/{ids['colab1_id']}/evolucao", token)
+
+    assert res.status_code == 200
+    indicadores = res.get_json()["indicadores"]
+    assert indicadores["media_tecnica"] == 3.67
+    assert indicadores["media_comportamental"] == 4.0
+    assert indicadores["media_lideranca"] == 2.0
+    assert indicadores["media_organizacional"] == 5.0
+    assert indicadores["media_geral"] == 3.19
+
+
+def test_indicadores_competencias_sem_avaliacao_retornam_zero(client):
+    ids = seed_data(client.application)
+    token = get_token(client, ids["admin_email"])
+
+    res = api_get(client, f"/colaboradores/{ids['colab2_id']}/evolucao", token)
+
+    assert res.status_code == 200
+    indicadores = res.get_json()["indicadores"]
+    assert indicadores["media_tecnica"] == 0.0
+    assert indicadores["media_comportamental"] == 0.0
+    assert indicadores["media_lideranca"] == 0.0
+    assert indicadores["media_organizacional"] == 0.0
+    assert indicadores["media_geral"] == 0.0
+
+
+def test_indicadores_competencias_desempatam_ultima_avaliacao_por_maior_id(client):
+    ids = seed_data(client.application)
+    token = get_token(client, ids["admin_email"])
+
+    with client.application.app_context():
+        lider = db.session.query(UsuarioModel).filter_by(email=ids["liderb_email"]).one()
+        tecnica = CompetenciaModel(nome="Tecnica desempate", tipo="TECNICA", peso=1.0, ativo=True)
+        db.session.add(tecnica)
+        db.session.flush()
+
+        mesmo_criado_em = datetime(2026, 8, 1, 10, 0)
+        avaliacao_menor_id = AvaliacaoModel(
+            colaborador_id=ids["colab2_id"],
+            avaliador_id=lider.id,
+            tipo="AVALIACAO_LIDER",
+            observacao_geral="Mesmo criado em - menor id",
+            data_avaliacao=datetime(2026, 8, 2, 10, 0),
+            criado_em=mesmo_criado_em,
+            status="CONCLUIDA",
+        )
+        avaliacao_maior_id = AvaliacaoModel(
+            colaborador_id=ids["colab2_id"],
+            avaliador_id=lider.id,
+            tipo="AVALIACAO_LIDER",
+            observacao_geral="Mesmo criado em - maior id",
+            data_avaliacao=datetime(2026, 7, 1, 10, 0),
+            criado_em=mesmo_criado_em,
+            status="CONCLUIDA",
+        )
+        db.session.add_all([avaliacao_menor_id, avaliacao_maior_id])
+        db.session.flush()
+
+        db.session.add_all([
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_menor_id.id, competencia_id=tecnica.id, nota=1),
+            ItemAvaliacaoModel(avaliacao_id=avaliacao_maior_id.id, competencia_id=tecnica.id, nota=5),
+        ])
+        db.session.commit()
+
+    res = api_get(client, f"/colaboradores/{ids['colab2_id']}/evolucao", token)
+
+    assert res.status_code == 200
+    indicadores = res.get_json()["indicadores"]
+    assert indicadores["media_tecnica"] == 5.0
+    assert indicadores["media_geral"] == 5.0
 
 
 # 18. Endpoint sem token retorna 401.
